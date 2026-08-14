@@ -2,6 +2,8 @@
 
 MAV Charts is a production-grade React and Recharts library of 48 semantic chart templates. Each template starts from a real communication question, preserves honest geometry, and ships in three visual systems: Signal, Editorial, and Digital.
 
+**[Explore the live Library →](https://maverickgao8848.github.io/mav-charts/)** · [Browse all 48 templates](https://maverickgao8848.github.io/mav-charts/library) · [Download v0.1.0](https://github.com/maverickgao8848/mav-charts/releases/tag/v0.1.0)
+
 ![MAV Charts studio](docs/previews/mav-studio.png)
 
 ## Highlights
@@ -12,7 +14,7 @@ MAV Charts is a production-grade React and Recharts library of 48 semantic chart
 - Keyboard navigation, screen-reader tables, reduced-motion support, and browser Axe coverage
 - Deterministic fixtures for missing, signed, extreme, long-label, and invalid data
 - SSR-safe ESM packages with independent subpath imports and tree-shaking
-- A single typed catalog shared by source documentation and the future Library site
+- A single typed catalog shared by source documentation and the live Library site
 
 ## Install
 
@@ -84,7 +86,7 @@ npm run check
 npm run test:visual
 ```
 
-`npm run check` performs strict TypeScript checking, 641 unit/component/SSR assertions, all package builds, and the demo production build. The Playwright suite owns the 1,247 visual baselines and accessibility/console checks.
+`npm run check` performs strict TypeScript checking, 641 unit/component/SSR assertions, all package builds, and the Library production build. The Playwright suite owns the 1,249 visual baselines and accessibility/console checks.
 
 ## Publishing
 

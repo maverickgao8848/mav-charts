@@ -11,7 +11,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "npm run build:packages && npm run build:site",
     "build:packages": "node scripts/build-packages.mjs",
-    "build:site": "vite build",
+    "build:site": "vite build && node scripts/create-pages-fallback.mjs",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

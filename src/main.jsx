@@ -232,6 +232,7 @@ import {
 import { resolveMotionPreferences } from "../packages/motion/src";
 import { visualSystemIds, visualSystems } from "../packages/themes/src";
 import { prototypeCatalog } from "../packages/catalog/src";
+import { LibraryApp as MavLibraryApp } from "./library/LibraryApp";
 import "./styles.css";
 
 const motionPreferences = resolveMotionPreferences(
@@ -2191,7 +2192,7 @@ function App() {
     );
   }
 
-  return <LibraryApp />;
+  return <MavLibraryApp />;
 }
 
 const rootElement = document.getElementById("root");
