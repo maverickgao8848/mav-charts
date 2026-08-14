@@ -9,8 +9,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "npm run build:packages && vite build",
+    "build": "npm run build:packages && npm run build:site",
     "build:packages": "node scripts/build-packages.mjs",
+    "build:site": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -19,7 +20,7 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "npm run build:packages && changeset publish",
-    "check": "npm run typecheck && npm run test && npm run build"
+    "check": "npm run build:packages && npm run typecheck && npm run test && npm run build:site"
   },
   "dependencies": {
     "react": "19.2.8",
