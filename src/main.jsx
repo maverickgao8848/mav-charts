@@ -629,6 +629,13 @@ function LibraryApp() {
 function App() {
   const params = new URLSearchParams(window.location.search);
   const previewTheme = params.get("theme");
+  if (params.has("boards")) {
+    return (
+      <main className="visual-study" data-visual-study>
+        {visualSystemIds.map((system) => <Board key={system} themeKey={system} />)}
+      </main>
+    );
+  }
   if (params.get("template") === "B05") {
     const visualSystem = visualSystemIds.includes(previewTheme)
       ? previewTheme

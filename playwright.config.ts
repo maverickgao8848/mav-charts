@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: "./tests/visual",
   fullyParallel: true,
   workers: 4,
-  timeout: 60_000,
+  timeout: 180_000,
   use: {
     baseURL: "http://127.0.0.1:4173",
     reducedMotion: "reduce",

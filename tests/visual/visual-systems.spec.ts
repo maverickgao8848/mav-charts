@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const systems = ["signal", "editorial", "digital"] as const;
 
 test("renders only the three approved visual systems", async ({ page }) => {
-  await page.goto("/?capture");
+  await page.goto("/?capture&boards=1");
   await page.evaluate(() => document.fonts.ready);
 
   await expect(page.locator("[data-board]")) .toHaveCount(3);
