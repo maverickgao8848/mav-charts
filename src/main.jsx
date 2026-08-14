@@ -231,6 +231,7 @@ import {
 } from "../packages/charts/src/B05-ohlc-candlestick";
 import { resolveMotionPreferences } from "../packages/motion/src";
 import { visualSystemIds, visualSystems } from "../packages/themes/src";
+import { prototypeCatalog } from "../packages/catalog/src";
 import "./styles.css";
 
 const motionPreferences = resolveMotionPreferences(
@@ -503,6 +504,125 @@ function Board({ themeKey }) {
         })}
       </div>
     </section>
+  );
+}
+
+const questionLabels = {
+  compare: "Compare",
+  trend: "Trend",
+  composition: "Composition",
+  distribution: "Distribution",
+  relationship: "Relationship",
+  flow: "Flow",
+  progress: "Progress",
+};
+
+function LibraryApp() {
+  const basePath = import.meta.env.BASE_URL;
+  const initial = new URLSearchParams(window.location.search);
+  const [query, setQuery] = React.useState(initial.get("q") ?? "");
+  const [question, setQuestion] = React.useState(initial.get("question") ?? "all");
+  const [system, setSystem] = React.useState(initial.get("system") ?? "signal");
+
+  const updateUrl = (nextQuery, nextQuestion, nextSystem) => {
+    const params = new URLSearchParams();
+    if (nextQuery) params.set("q", nextQuery);
+    if (nextQuestion !== "all") params.set("question", nextQuestion);
+    if (nextSystem !== "signal") params.set("system", nextSystem);
+    window.history.replaceState(null, "", params.size ? `?${params}` : window.location.pathname);
+  };
+
+  const filtered = React.useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return prototypeCatalog.filter((item) => {
+      const matchesQuestion = question === "all" || item.questions.includes(question);
+      const haystack = `${item.id} ${item.name} ${item.nameZh} ${item.description} ${item.descriptionZh}`.toLowerCase();
+      return matchesQuestion && (!needle || haystack.includes(needle));
+    });
+  }, [query, question]);
+
+  const setFilter = (kind, value) => {
+    const nextQuery = kind === "query" ? value : query;
+    const nextQuestion = kind === "question" ? value : question;
+    const nextSystem = kind === "system" ? value : system;
+    if (kind === "query") setQuery(value);
+    if (kind === "question") setQuestion(value);
+    if (kind === "system") setSystem(value);
+    updateUrl(nextQuery, nextQuestion, nextSystem);
+  };
+
+  return (
+    <main className="library-shell">
+      <header className="library-hero">
+        <nav className="library-nav" aria-label="Primary navigation">
+          <a className="library-brand" href={basePath}>
+            <span className="library-brand-mark">M/A/V</span>
+            <span>CHART LIBRARY</span>
+          </a>
+          <div className="library-nav-links">
+            <a href="#catalog">48 templates</a>
+            <a href="https://github.com/maverickgao8848/mav-charts">GitHub</a>
+            <a href="https://github.com/maverickgao8848/mav-charts/blob/main/CONTRIBUTING.md">Contribute</a>
+          </div>
+        </nav>
+        <div className="library-hero-grid">
+          <div className="library-kicker">V1 / RECHARTS / OPEN SOURCE</div>
+          <h1>Find the chart<br />that tells the truth.</h1>
+          <p>Forty-eight production templates organized by the question you need to answer—not by a gallery of technical primitives.</p>
+          <div className="library-proof" aria-label="Library facts">
+            <span><strong>48</strong> stable templates</span>
+            <span><strong>03</strong> visual systems</span>
+            <span><strong>641</strong> automated checks</span>
+          </div>
+        </div>
+        <div className="library-redline" aria-hidden="true"><span>SEMANTIC FIRST</span><span>HONEST GEOMETRY</span><span>REAL COMPONENTS</span></div>
+      </header>
+
+      <section className="library-controls" id="catalog" aria-label="Catalog filters">
+        <label className="library-search">
+          <span>SEARCH / 搜索</span>
+          <input value={query} onChange={(event) => setFilter("query", event.target.value)} placeholder="ID, name, question…" />
+        </label>
+        <label>
+          <span>QUESTION</span>
+          <select value={question} onChange={(event) => setFilter("question", event.target.value)}>
+            <option value="all">All questions</option>
+            {Object.entries(questionLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+          </select>
+        </label>
+        <fieldset className="system-switch">
+          <legend>VISUAL SYSTEM</legend>
+          {visualSystemIds.map((value) => <button key={value} type="button" aria-pressed={system === value} onClick={() => setFilter("system", value)}>{value}</button>)}
+        </fieldset>
+        <div className="library-result-count"><strong>{String(filtered.length).padStart(2, "0")}</strong><span>results</span></div>
+      </section>
+
+      <section className="library-grid" aria-live="polite">
+        {filtered.map((item, index) => {
+          const directory = item.githubPath.split("/").at(-2);
+          return (
+            <article className="library-card" key={item.id} style={{ "--order": index }}>
+              <div className="library-card-top"><span>{item.id}</span><span>{item.questions.map((entry) => questionLabels[entry]).join(" / ")}</span></div>
+              <a className="library-thumbnail" href={`?template=${item.id}&theme=${system}&library=1`} aria-label={`Open ${item.name}`}>
+                <img src={`${basePath}catalog/${item.id}.png`} alt={`${item.name} in the MAV Signal system`} loading="lazy" />
+                <span className="library-open">OPEN LIVE ↗</span>
+              </a>
+              <div className="library-card-copy">
+                <h2>{item.name}</h2>
+                <h3>{item.nameZh}</h3>
+                <p>{item.description}</p>
+              </div>
+              <footer>
+                <span>{item.primitive.slice(0, 2).join(" + ")}</span>
+                <a href={`https://github.com/maverickgao8848/mav-charts/blob/main/${item.githubPath}`}>SOURCE</a>
+              </footer>
+            </article>
+          );
+        })}
+      </section>
+      {filtered.length === 0 ? <div className="library-empty"><strong>NO MATCH</strong><span>Try a chart ID, business question, or another filter.</span></div> : null}
+      <footer className="library-footer"><span>MAV CHARTS / 0.1.0</span><span>BUILT FROM THE SAME TYPED CATALOG AS THE REPOSITORY</span></footer>
+    </main>
   );
 }
 
@@ -2064,16 +2184,16 @@ function App() {
     );
   }
 
-  return (
-    <main>
-      {visualSystemIds.map((themeKey) => (
-        <Board key={themeKey} themeKey={themeKey} />
-      ))}
-    </main>
-  );
+  return <LibraryApp />;
 }
 
 const rootElement = document.getElementById("root");
 const appRoot = window.__MAV_CHARTS_ROOT__ ?? createRoot(rootElement);
 window.__MAV_CHARTS_ROOT__ = appRoot;
-appRoot.render(<App />);
+const detailParams = new URLSearchParams(window.location.search);
+appRoot.render(
+  <>
+    <App />
+    {detailParams.has("library") && detailParams.has("template") ? <a className="library-back" href={import.meta.env.BASE_URL}>← BACK TO LIBRARY</a> : null}
+  </>,
+);
