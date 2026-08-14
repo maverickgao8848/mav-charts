@@ -1,0 +1,13 @@
+import axe from "axe-core";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
+import { PercentAreaChart, percentAreaEdgeCases, percentAreaExample } from "../index";
+describe("T11 component", () => {
+  it("renders ready, empty and invalid states", () => { const { rerender } = render(<PercentAreaChart data={percentAreaExample} animate={false} />); expect(screen.getByRole("article")).toHaveAttribute("data-state", "ready"); rerender(<PercentAreaChart data={[]} animate={false} />); expect(screen.getByRole("article")).toHaveAttribute("data-state", "empty"); rerender(<PercentAreaChart data={percentAreaEdgeCases.zeroTotal} animate={false} />); expect(screen.getByRole("article")).toHaveAttribute("data-state", "invalid"); });
+  it("retains raw and precise values for missing rows", () => { render(<PercentAreaChart data={percentAreaEdgeCases.missingValue} animate={false} />); const table = screen.getByRole("table"); expect(table).toHaveTextContent("Feb"); expect(table).toHaveTextContent("Missing"); expect(table).toHaveTextContent("precise share"); });
+  it("supports keyboard status", () => { render(<PercentAreaChart data={percentAreaEdgeCases.missingValue} animate={false} />); const group = screen.getByRole("group", { name: "Percent area interactive chart" }); fireEvent.focus(group); fireEvent.keyDown(group, { key: "ArrowRight" }); expect(screen.getByRole("status")).toHaveTextContent("both normalized areas break"); fireEvent.keyDown(group, { key: "End" }); expect(screen.getByRole("status")).toHaveTextContent("Primary 60%"); });
+  it("states normalized whole-gap semantics", () => { render(<PercentAreaChart animate={false} />); const legend = screen.getByRole("list", { name: "Percent area legend" }); expect(legend).toHaveTextContent("100% NORMALIZED"); expect(legend).toHaveTextContent("MISSING = WHOLE GAP"); });
+  it("honors reduced motion", () => { const match = vi.spyOn(window, "matchMedia").mockReturnValue({ matches: true, media: "", onchange: null, addListener: vi.fn(), removeListener: vi.fn(), addEventListener: vi.fn(), removeEventListener: vi.fn(), dispatchEvent: vi.fn() }); render(<PercentAreaChart />); expect(screen.getByRole("group", { name: "Percent area interactive chart" })).toHaveAttribute("data-percent-area-animation", "false"); match.mockRestore(); });
+  it("passes axe and SSR", async () => { const { container } = render(<PercentAreaChart animate={false} />); expect((await axe.run(container, { rules: { "color-contrast": { enabled: false } } })).violations).toEqual([]); expect(() => renderToString(<PercentAreaChart animate={false} />)).not.toThrow(); });
+});

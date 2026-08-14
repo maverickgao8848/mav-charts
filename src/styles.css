@@ -1,0 +1,1294 @@
+@font-face {
+  font-family: "MAV Inter";
+  src: url("/fonts/Inter-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MAV Inter";
+  src: url("/fonts/Inter-700.woff2") format("woff2");
+  font-weight: 700 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MAV Mono";
+  src: url("/fonts/JetBrainsMono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MAV Mono";
+  src: url("/fonts/JetBrainsMono-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MAV Montserrat";
+  src: url("/fonts/Montserrat-wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MAV Chiron";
+  src: url("/fonts/ChironSungHK-B-It.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MAV Chiron";
+  src: url("/fonts/ChironSungHK-H-It.woff2") format("woff2");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  background: #000;
+  font-family: "Segoe UI Variable", "Microsoft YaHei UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: geometricPrecision;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chart-state {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  border: 1px dashed var(--grid);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100%;
+  background: #000;
+}
+
+body {
+  overflow-x: auto;
+}
+
+main {
+  display: grid;
+  gap: 72px;
+  justify-items: center;
+  padding: 48px 0 96px;
+  background:
+    radial-gradient(circle at 50% 0%, #181818 0, #050505 28%, #000 64%), #000;
+}
+
+.template-preview {
+  display: grid;
+  min-height: 100vh;
+  padding: clamp(16px, 4vw, 48px);
+  place-items: center;
+}
+
+.template-preview > .chart-card {
+  width: min(100%, 960px);
+  height: min(700px, calc(100vh - clamp(32px, 8vw, 96px)));
+  min-height: 420px;
+}
+
+.visual-board {
+  position: relative;
+  isolation: isolate;
+  width: 1600px;
+  height: 1000px;
+  overflow: hidden;
+  padding: 50px 54px 48px;
+  background: var(--board-bg);
+  color: var(--text);
+}
+
+.visual-board::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--grid) 42%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--grid) 30%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.68), transparent 64%);
+  opacity: 0.32;
+}
+
+.visual-board::after {
+  position: absolute;
+  right: -180px;
+  bottom: -220px;
+  z-index: -1;
+  width: 700px;
+  height: 700px;
+  border: 1px solid var(--grid);
+  border-radius: 50%;
+  content: "";
+  opacity: 0.45;
+}
+
+.board-glow {
+  position: absolute;
+  top: -230px;
+  right: 150px;
+  z-index: -1;
+  width: 620px;
+  height: 420px;
+  border-radius: 50%;
+  background: var(--primary);
+  filter: blur(150px);
+  opacity: 0.09;
+}
+
+.theme-ornament,
+.board-ghost-index {
+  position: absolute;
+  pointer-events: none;
+}
+
+.theme-ornament {
+  z-index: 2;
+}
+
+.board-ghost-index {
+  display: none;
+  z-index: 0;
+}
+
+.board-header,
+.chart-grid {
+  position: relative;
+  z-index: 1;
+}
+
+.board-header {
+  display: grid;
+  grid-template-columns: 300px 1fr 330px;
+  align-items: start;
+  min-height: 202px;
+  border-bottom: 1px solid var(--grid);
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 7px;
+}
+
+.brand-lockup strong,
+.brand-lockup small {
+  display: block;
+  letter-spacing: 0.14em;
+}
+
+.brand-lockup strong {
+  font-size: 13px;
+}
+
+.brand-lockup small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.mav-mark {
+  display: grid;
+  grid-template-columns: repeat(3, 17px);
+  align-items: end;
+  height: 34px;
+  border: 1px solid var(--grid);
+  padding: 5px;
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.mav-mark span:nth-child(2) {
+  transform: translateY(-7px);
+  color: var(--text);
+}
+
+.board-title {
+  padding: 0 42px 30px;
+}
+
+.board-title > span {
+  color: var(--primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+.board-title h1 {
+  margin: 12px 0 8px;
+  font-family: var(--display);
+  font-size: 72px;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.board-title p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.board-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 22px;
+}
+
+.board-meta > strong {
+  font-family: var(--display);
+  font-size: 29px;
+  font-weight: 500;
+}
+
+.board-meta > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.board-meta span {
+  border: 1px solid var(--grid);
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-top: 28px;
+}
+
+.chart-card {
+  display: grid;
+  grid-template-rows: 122px 1fr 35px;
+  min-width: 0;
+  height: 700px;
+  overflow: hidden;
+  border: 1px solid var(--grid);
+  border-radius: var(--container-radius, 22px);
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--surface-alt) 80%, transparent),
+      transparent 38%
+    ),
+    var(--surface);
+}
+
+.chart-header {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 13px;
+  align-items: start;
+  padding: 24px 23px 16px;
+  border-bottom: 1px solid var(--grid);
+}
+
+.chart-code {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--board-bg);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.chart-header h2 {
+  margin: -2px 0 7px;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.08;
+}
+
+.chart-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 0.13em;
+}
+
+.chart-stage {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  padding: 20px 17px 8px;
+}
+
+.chart-card footer {
+  display: flex;
+  align-items: center;
+  padding: 0 23px;
+  border-top: 1px solid var(--grid);
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+}
+
+/* Signal is an editorial chart plate, not a themed dashboard card. Keep this
+   rule theme-scoped so standalone renders inherit the same Ying grammar as the
+   overview board: transparent stage, red folio, italic conclusion and no UI
+   chrome competing with the data. */
+.chart-card[data-visual-system="signal"] {
+  grid-template-rows: 116px 1fr 34px;
+  border: 0;
+  border-radius: 0;
+  background: #000;
+}
+
+.chart-card[data-visual-system="signal"] .chart-header {
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 12px;
+  padding: 24px 24px 12px;
+  border-bottom: 0;
+}
+
+.chart-card[data-visual-system="signal"] .chart-code {
+  display: block;
+  width: auto;
+  height: auto;
+  padding-top: 3px;
+  border-radius: 0;
+  background: transparent;
+  color: #ff0000;
+  font-family: "MAV Montserrat", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.chart-card[data-visual-system="signal"] .chart-header h2 {
+  max-width: 760px;
+  margin: -5px 0 7px;
+  font-family: "MAV Chiron", Georgia, serif;
+  font-size: clamp(27px, 3.25vw, 36px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.chart-card[data-visual-system="signal"] .chart-header p {
+  color: rgba(255, 255, 255, 0.58);
+  font-family: "MAV Montserrat", sans-serif;
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 0.15em;
+}
+
+.chart-card[data-visual-system="signal"] .chart-stage {
+  padding: 4px 24px 3px;
+}
+
+.chart-card[data-visual-system="signal"] footer {
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.48);
+  font-family: "MAV Montserrat", sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+}
+
+@media (max-width: 520px) {
+  .template-preview
+    > .chart-card[data-visual-system="signal"][data-chart-id="P02"],
+  .template-preview
+    > .chart-card[data-visual-system="signal"][data-chart-id="P05"] {
+    grid-template-rows: 160px 1fr 34px;
+  }
+
+  .template-preview .chart-card[data-chart-id="B03"] .dual-axis-plot {
+    top: 16px !important;
+    height: calc(100% - 16px);
+  }
+}
+
+.custom-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.svg-row {
+  animation: row-enter 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.radial-wrap,
+.donut-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.radial-value,
+.donut-center {
+  position: absolute;
+  top: 50%;
+  left: 47.5%;
+  display: grid;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.radial-value strong,
+.donut-center strong {
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.radial-value span,
+.donut-center span {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+/* MAV Signal — inherits the fixed Ying chart language: black stage, direct red,
+   italic editorial hierarchy, transparent containers and crisp plot geometry. */
+.board-signal {
+  padding: 44px 60px 34px;
+}
+
+.board-signal::before {
+  background-image:
+    linear-gradient(to right, transparent 0 93%, rgba(255, 255, 255, 0.04) 93%),
+    linear-gradient(
+      to bottom,
+      transparent 0 92%,
+      rgba(255, 255, 255, 0.035) 92%
+    );
+  background-size: 84px 84px;
+  mask-image: linear-gradient(to bottom, #000, transparent 78%);
+  opacity: 0.28;
+}
+
+.board-signal::after {
+  top: -80px;
+  right: 130px;
+  bottom: auto;
+  width: 22px;
+  height: 360px;
+  border: 0;
+  border-radius: 0;
+  background: #ff0000;
+  transform: skewX(-14deg);
+  opacity: 0.85;
+}
+
+.board-signal .board-glow {
+  display: none;
+}
+
+.board-signal .board-ghost-index {
+  top: -66px;
+  right: 36px;
+  display: block;
+  color: rgba(255, 0, 0, 0.12);
+  font-family: var(--display);
+  font-size: 300px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.12em;
+  line-height: 1;
+}
+
+.board-signal .theme-ornament {
+  top: 231px;
+  left: 60px;
+  display: grid;
+  grid-template-columns: 84px 22px 10px;
+  gap: 8px;
+  height: 5px;
+}
+
+.board-signal .theme-ornament span {
+  background: #ff0000;
+}
+
+.board-signal .theme-ornament span:nth-child(2) {
+  background: #fff;
+}
+
+.board-signal .theme-ornament span:nth-child(3) {
+  background: #ff0000;
+  opacity: 0.35;
+}
+
+.board-signal .board-header {
+  grid-template-columns: 285px 1fr 288px;
+  min-height: 204px;
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.board-signal .mav-mark {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ff0000;
+}
+
+.board-signal .brand-lockup strong,
+.board-signal .brand-lockup small,
+.board-signal .board-title > span,
+.board-signal .board-meta span,
+.board-signal .chart-header p,
+.board-signal .chart-card footer {
+  font-family: "MAV Montserrat", sans-serif;
+}
+
+.board-signal .board-title {
+  padding: 0 34px 25px;
+}
+
+.board-signal .board-title > span {
+  color: #ff0000;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.board-signal .board-title h1 {
+  margin-top: 8px;
+  font-size: 88px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.07em;
+}
+
+.board-signal .board-title p {
+  max-width: 610px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.board-signal .board-meta > strong {
+  color: #fff;
+  font-size: 33px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.board-signal .board-meta span {
+  border: 0;
+  border-left: 2px solid #ff0000;
+  border-radius: 0;
+  padding: 2px 9px;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.board-signal .chart-grid {
+  gap: 0;
+  padding-top: 19px;
+}
+
+.board-signal .chart-card {
+  grid-template-rows: 126px 1fr 31px;
+  height: 699px;
+  border: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0;
+  background: transparent;
+}
+
+.board-signal .chart-card:last-child {
+  border-right: 0;
+}
+
+.board-signal .chart-header {
+  grid-template-columns: 54px 1fr;
+  padding: 24px 26px 12px;
+  border-bottom: 0;
+}
+
+.board-signal .chart-code {
+  display: block;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  color: #ff0000;
+  font-family: "MAV Montserrat", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+}
+
+.board-signal .chart-header h2 {
+  margin-top: -5px;
+  font-size: 28px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.board-signal .chart-stage {
+  padding: 10px 22px 5px;
+}
+
+.board-signal .chart-stage > [role="group"] > [role="list"],
+.board-signal
+  .chart-stage
+  > [role="group"]
+  > [aria-label="Direct series values"],
+.board-signal .chart-stage > [role="group"] > [data-dual-axis-overlay] {
+  display: none !important;
+}
+
+.board-signal .chart-card footer {
+  border-top-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.48);
+}
+
+/* MAV Editorial — BMW M-inspired engineered contrast without brand assets. */
+.board-editorial {
+  padding: 42px 54px 38px;
+  font-family: "MAV Inter", sans-serif;
+}
+
+.board-editorial::before {
+  background-image:
+    repeating-linear-gradient(
+      112deg,
+      rgba(255, 255, 255, 0.018) 0 2px,
+      transparent 2px 9px
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0 55%,
+      rgba(255, 255, 255, 0.035) 55% 55.1%,
+      transparent 55.1%
+    );
+  background-size: auto;
+  mask-image: none;
+  opacity: 1;
+}
+
+.board-editorial::after {
+  top: 0;
+  right: -170px;
+  bottom: auto;
+  width: 620px;
+  height: 1000px;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.055),
+    transparent 56%
+  );
+  clip-path: polygon(36% 0, 100% 0, 100% 100%, 0 100%);
+  opacity: 1;
+}
+
+.board-editorial .board-glow {
+  top: -18px;
+  right: 430px;
+  width: 570px;
+  height: 12px;
+  border-radius: 0;
+  background: linear-gradient(90deg, transparent, #fff 62%, #ff334c);
+  filter: blur(8px);
+  opacity: 0.42;
+}
+
+.board-editorial .theme-ornament {
+  top: 51px;
+  right: 344px;
+  display: flex;
+  gap: 7px;
+  transform: skewX(-18deg);
+}
+
+.board-editorial .theme-ornament span {
+  width: 42px;
+  height: 7px;
+  background: #f4f4f5;
+}
+
+.board-editorial .theme-ornament span:nth-child(2) {
+  width: 26px;
+  background: #1688ff;
+}
+
+.board-editorial .theme-ornament span:nth-child(3) {
+  width: 12px;
+  background: #ff334c;
+}
+
+.board-editorial .board-header {
+  grid-template-columns: 276px 1fr 320px;
+  min-height: 208px;
+  border-bottom: 1px solid #5a5a5e;
+}
+
+.board-editorial .mav-mark {
+  border: 0;
+  border-left: 4px solid #f4f4f5;
+  color: #ff334c;
+}
+
+.board-editorial .brand-lockup small,
+.board-editorial .chart-header p,
+.board-editorial .chart-card footer,
+.board-editorial .chart-code {
+  font-family: "MAV Mono", monospace;
+}
+
+.board-editorial .board-title {
+  padding: 1px 38px 24px;
+}
+
+.board-editorial .board-title > span {
+  color: #f4f4f5;
+  font-family: "MAV Mono", monospace;
+  letter-spacing: 0.13em;
+}
+
+.board-editorial .board-title h1 {
+  margin: 10px 0 9px;
+  font-size: 69px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.board-editorial .board-title p {
+  color: rgba(244, 244, 245, 0.58);
+}
+
+.board-editorial .board-meta > strong {
+  font-family: "MAV Mono", monospace;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.board-editorial .board-meta span {
+  border: 0;
+  border-left: 1px solid #5a5a5e;
+  border-radius: 0;
+  padding: 3px 8px 3px 11px;
+  font-family: "MAV Mono", monospace;
+}
+
+.board-editorial .chart-grid {
+  gap: 12px;
+  padding-top: 21px;
+}
+
+.board-editorial .chart-card {
+  position: relative;
+  grid-template-rows: 126px 1fr 34px;
+  height: 691px;
+  border: 1px solid #353538;
+  border-radius: 0;
+  background: #1a1a1c;
+  clip-path: polygon(0 0, calc(100% - 19px) 0, 100% 19px, 100% 100%, 0 100%);
+}
+
+.board-editorial .chart-card::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 66%;
+  height: 2px;
+  background: linear-gradient(90deg, #f4f4f5, rgba(244, 244, 245, 0));
+  content: "";
+}
+
+.board-editorial .chart-card:nth-child(2)::before {
+  background: linear-gradient(90deg, #1688ff, rgba(22, 136, 255, 0));
+}
+
+.board-editorial .chart-card:nth-child(3)::before {
+  background: linear-gradient(90deg, #ff334c, rgba(255, 51, 76, 0));
+}
+
+.board-editorial .chart-header {
+  grid-template-columns: 58px 1fr;
+  padding: 25px 22px 13px;
+  border-bottom-color: #353538;
+}
+
+.board-editorial .chart-code {
+  display: block;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-left: 3px solid #ff334c;
+  border-radius: 0;
+  background: transparent;
+  color: #f4f4f5;
+  font-size: 9px;
+  line-height: 19px;
+  text-align: center;
+}
+
+.board-editorial .chart-header h2 {
+  margin-top: -5px;
+  font-family: "MAV Inter", sans-serif;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+.board-editorial .chart-stage {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 43px,
+    rgba(255, 255, 255, 0.03) 44px
+  );
+}
+
+.board-editorial .chart-card footer {
+  border-top-color: #353538;
+}
+
+/* MAV Digital — xAI-inspired research mono: luminance and hairlines do the work. */
+.board-digital {
+  padding: 48px 60px 40px;
+  font-family: "MAV Inter", sans-serif;
+}
+
+.board-digital::before {
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.18) 0 1px, transparent 1.5px),
+    linear-gradient(to right, transparent 0 95%, rgba(255, 255, 255, 0.025) 95%);
+  background-position:
+    0 0,
+    0 0;
+  background-size:
+    138px 122px,
+    86px 100%;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.52), transparent 78%);
+  opacity: 0.34;
+}
+
+.board-digital::after {
+  top: 48px;
+  right: 60px;
+  bottom: auto;
+  width: 290px;
+  height: 1px;
+  border: 0;
+  border-radius: 0;
+  background: linear-gradient(90deg, transparent, rgba(242, 242, 242, 0.42));
+  opacity: 1;
+}
+
+.board-digital .board-glow {
+  display: none;
+}
+
+.board-digital .theme-ornament {
+  top: 40px;
+  right: 60px;
+  width: 17px;
+  height: 17px;
+}
+
+.board-digital .theme-ornament::before,
+.board-digital .theme-ornament::after {
+  position: absolute;
+  background: rgba(242, 242, 242, 0.55);
+  content: "";
+}
+
+.board-digital .theme-ornament::before {
+  top: 8px;
+  left: 0;
+  width: 17px;
+  height: 1px;
+}
+
+.board-digital .theme-ornament::after {
+  top: 0;
+  left: 8px;
+  width: 1px;
+  height: 17px;
+}
+
+.board-digital .theme-ornament span {
+  display: none;
+}
+
+.board-digital .board-header {
+  grid-template-columns: 270px 1fr 310px;
+  min-height: 203px;
+  border-bottom-color: rgba(242, 242, 242, 0.18);
+}
+
+.board-digital .mav-mark {
+  border: 0;
+  color: #f2f2f2;
+  font-family: "MAV Mono", monospace;
+}
+
+.board-digital .brand-lockup strong,
+.board-digital .brand-lockup small,
+.board-digital .board-title > span,
+.board-digital .board-meta,
+.board-digital .chart-code,
+.board-digital .chart-header p,
+.board-digital .chart-card footer {
+  font-family: "MAV Mono", monospace;
+}
+
+.board-digital .board-title {
+  padding: 0 34px 27px;
+}
+
+.board-digital .board-title > span {
+  color: rgba(242, 242, 242, 0.7);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+}
+
+.board-digital .board-title h1 {
+  margin: 12px 0 10px;
+  font-size: 65px;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+.board-digital .board-title p {
+  color: rgba(242, 242, 242, 0.56);
+}
+
+.board-digital .board-meta {
+  gap: 27px;
+}
+
+.board-digital .board-meta > strong {
+  font-family: "MAV Mono", monospace;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.board-digital .board-meta span {
+  border: 0;
+  border-radius: 0;
+  padding: 0 0 0 14px;
+  color: rgba(242, 242, 242, 0.56);
+  font-weight: 400;
+}
+
+.board-digital .board-meta span + span::before {
+  margin-right: 14px;
+  color: #878787;
+  content: "/";
+}
+
+.board-digital .chart-grid {
+  gap: 0;
+  padding-top: 25px;
+  border: 1px solid rgba(242, 242, 242, 0.18);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.board-digital .chart-card {
+  grid-template-rows: 122px 1fr 33px;
+  height: 677px;
+  border: 0;
+  border-right: 1px solid rgba(242, 242, 242, 0.18);
+  border-radius: 0;
+  background: rgba(21, 21, 21, 0.78);
+}
+
+.board-digital .chart-card:nth-child(2) {
+  background: rgba(18, 18, 18, 0.9);
+}
+
+.board-digital .chart-card:last-child {
+  border-right: 0;
+}
+
+.board-digital .chart-header {
+  grid-template-columns: 63px 1fr;
+  padding: 25px 22px 14px;
+  border-bottom-color: rgba(242, 242, 242, 0.18);
+}
+
+.board-digital .chart-code {
+  display: block;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #f2f2f2;
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.board-digital .chart-code::before {
+  content: "[";
+}
+
+.board-digital .chart-code::after {
+  content: "]";
+}
+
+.board-digital .chart-header h2 {
+  margin-top: -5px;
+  font-family: "MAV Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-transform: none;
+}
+
+.board-digital .chart-stage {
+  padding: 19px 17px 7px;
+}
+
+.board-digital .chart-card footer {
+  border-top-color: rgba(242, 242, 242, 0.18);
+  color: rgba(242, 242, 242, 0.42);
+  font-weight: 400;
+}
+
+.board-digital .radial-value strong {
+  font-family: "MAV Mono", monospace;
+  font-weight: 400;
+}
+
+@keyframes row-enter {
+  from {
+    transform: translateY(9px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ying-reveal {
+  from {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes engineered-lock {
+  0% {
+    transform: translateX(-34px) skewX(-1.5deg);
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+  72% {
+    transform: translateX(0) skewX(-1.5deg);
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) skewX(0);
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@keyframes research-emerge {
+  from {
+    filter: brightness(0.42);
+    opacity: 0;
+  }
+  to {
+    filter: brightness(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .board-signal .chart-card {
+    animation: ying-reveal 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .board-editorial .chart-card {
+    animation: engineered-lock 0.56s cubic-bezier(0.18, 0.82, 0.22, 1) both;
+  }
+
+  .board-digital .chart-card {
+    animation: research-emerge 0.9s ease-out both;
+  }
+
+  .chart-card:nth-child(2) {
+    animation-delay: 90ms;
+  }
+
+  .chart-card:nth-child(3) {
+    animation-delay: 180ms;
+  }
+}
+
+html[data-capture="true"] *,
+html[data-capture="true"] *::before,
+html[data-capture="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  main {
+    display: block;
+    padding: 0;
+  }
+
+  main.template-preview {
+    display: grid;
+    padding: 16px;
+  }
+
+  .template-preview > .chart-card {
+    height: calc(100vh - 32px);
+    min-height: 520px;
+  }
+
+  .visual-board {
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    padding: 28px 20px 36px;
+  }
+
+  .visual-board .board-header,
+  .visual-board .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .visual-board .board-header {
+    min-height: 0;
+  }
+
+  .visual-board .board-title {
+    padding: 36px 0 28px;
+  }
+
+  .visual-board .board-title h1 {
+    font-size: clamp(42px, 14vw, 64px);
+    overflow-wrap: anywhere;
+  }
+
+  .visual-board .board-title p {
+    max-width: 36rem;
+  }
+
+  .visual-board .board-meta {
+    align-items: flex-start;
+    padding-bottom: 24px;
+  }
+
+  .visual-board .chart-grid {
+    gap: 16px;
+    padding-bottom: 32px;
+  }
+
+  .visual-board .chart-card {
+    width: 100%;
+    height: min(660px, 165vw);
+    min-height: 540px;
+  }
+
+  .visual-board .chart-header {
+    grid-template-columns: 50px minmax(0, 1fr);
+    padding: 22px 18px 16px;
+  }
+
+  .visual-board .chart-header h2 {
+    font-size: clamp(18px, 5.8vw, 24px);
+  }
+
+  .visual-board::after,
+  .visual-board .board-ghost-index,
+  .visual-board .theme-ornament {
+    display: none;
+  }
+}

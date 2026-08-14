@@ -1,0 +1,10 @@
+export type DivergingBarDatum = { label: string; value: number | null; detail?: string };
+export type DivergingBarGeometryDatum = DivergingBarDatum & { index: number; missing: boolean; focus: boolean };
+export function validateDivergingBarData(data: readonly DivergingBarDatum[]) { const errors: string[] = []; const labels = new Set<string>(); data.forEach((datum, index) => { const label = datum.label.trim(); if (!label) errors.push(`Datum ${index} requires a non-empty label.`); if (labels.has(label)) errors.push(`Datum ${index} duplicates label ${datum.label}.`); labels.add(label); if (datum.value !== null && (typeof datum.value !== "number" || !Number.isFinite(datum.value))) errors.push(`Datum ${index} contains a non-finite value.`); }); return { valid: errors.length === 0, errors } as const; }
+export const buildDivergingBarGeometry = (data: readonly DivergingBarDatum[]): readonly DivergingBarGeometryDatum[] => {
+  const focusIndex = data.findIndex(({ value }) => value !== null);
+  return data.map((datum, index) => ({ ...datum, index, missing: datum.value === null, focus: index === focusIndex }));
+};
+export function getDivergingBarDomain(data: readonly DivergingBarDatum[]): readonly [number, number] { const values = data.map(({ value }) => value).filter((value): value is number => typeof value === "number" && Number.isFinite(value)); if (!values.length) return [-1, 1]; const minimum = Math.min(0, ...values), maximum = Math.max(0, ...values); if (minimum === maximum) return [-1, 1]; if (minimum === 0) return [0, maximum * 1.12 || 1]; if (maximum === 0) return [minimum * 1.12, 0]; const padding = (maximum - minimum) * .08; return [minimum - padding, maximum + padding]; }
+export const mapDivergingBarX = (value: number, domain: readonly [number, number], range: readonly [number, number]) => range[0] + ((value - domain[0]) / (domain[1] - domain[0])) * (range[1] - range[0]);
+export const getDivergingBarLength = (value: number, domain: readonly [number, number], range: readonly [number, number]) => Math.abs(mapDivergingBarX(value, domain, range) - mapDivergingBarX(0, domain, range));

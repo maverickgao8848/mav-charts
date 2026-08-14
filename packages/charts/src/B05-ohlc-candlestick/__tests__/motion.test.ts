@@ -1,0 +1,1 @@
+import { describe, expect, it } from "vitest"; import { getOhlcMotion } from "../motion"; describe("B05 motion", () => { it("supports animated and static custom Bar shapes", () => { expect(getOhlcMotion("signal", true).isAnimationActive).toBe(true); expect(getOhlcMotion("digital", false).isAnimationActive).toBe(false); }); });

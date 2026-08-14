@@ -1,0 +1,8 @@
+import { describe, expect, it } from "vitest"; import { buildStackedBarGeometry, getStackedBarDomain, getStackedBarSegmentLength, validateStackedBarData } from "../schema"; import { stackedBarEdgeCases, stackedBarExample } from "../example-data";
+describe("C07 stack geometry", () => {
+  it("does not normalize arbitrary totals", () => { const rows = buildStackedBarGeometry(stackedBarEdgeCases.arbitraryTotal); expect(rows.map(({ total }) => total)).toEqual([125, 41]); expect(rows[0].comparisonStart).toBe(80); expect(rows[0].comparisonEnd).toBe(125); });
+  it("accumulates signed segments independently", () => { const [bothNegative,, split] = buildStackedBarGeometry(stackedBarEdgeCases.negative); expect(bothNegative).toMatchObject({ valueStart: 0, valueEnd: -14, comparisonStart: -14, comparisonEnd: -22, negativeTotal: -22 }); expect(split).toMatchObject({ valueStart: 0, valueEnd: -4, comparisonStart: 0, comparisonEnd: 7 }); });
+  it("keeps null as a gap and withholds total", () => { expect(buildStackedBarGeometry(stackedBarEdgeCases.missingValue)[0]).toMatchObject({ valueStart: null, total: null, positiveTotal: 36 }); });
+  it("uses honest domain and segment lengths", () => { const positive = getStackedBarDomain(stackedBarExample); expect(positive[0]).toBe(0); expect(positive[1]).toBeCloseTo(112); const signed = getStackedBarDomain(stackedBarEdgeCases.negative); expect(signed[0]).toBeLessThan(-22); expect(signed[1]).toBeGreaterThan(14); expect(getStackedBarSegmentLength(80, 125, [0, 140], [100, 800])).toBe(225); });
+  it("rejects invalid values", () => { expect(validateStackedBarData(stackedBarExample).valid).toBe(true); expect(validateStackedBarData(stackedBarEdgeCases.invalid).valid).toBe(false); });
+});

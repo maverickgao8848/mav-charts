@@ -1,0 +1,13 @@
+import axe from "axe-core";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
+import { TargetLineChart, targetLineEdgeCases, targetLineExample } from "../index";
+describe("T05 component", () => {
+  it("renders ready/empty/invalid", () => { const { rerender } = render(<TargetLineChart data={targetLineExample} animate={false} />); expect(screen.getByRole("article")).toHaveAttribute("data-state", "ready"); rerender(<TargetLineChart data={[]} animate={false} />); expect(screen.getByRole("article")).toHaveAttribute("data-state", "empty"); rerender(<TargetLineChart data={targetLineEdgeCases.invalidTarget} animate={false} />); expect(screen.getByRole("article")).toHaveAttribute("data-state", "invalid"); });
+  it("retains actual, target, delta and missing in table", () => { render(<TargetLineChart data={targetLineEdgeCases.missing} animate={false} />); const table=screen.getByRole("table"); expect(table).toHaveTextContent("Feb"); expect(table).toHaveTextContent("Missing"); expect(table).toHaveTextContent("Target"); expect(table).toHaveTextContent("Delta"); });
+  it("supports keyboard status", () => { render(<TargetLineChart data={targetLineExample} animate={false} unit=" pts" />); const chart=screen.getByRole("group", { name: "Target line interactive chart" }); fireEvent.focus(chart); expect(screen.getByRole("status")).toHaveTextContent("below"); fireEvent.keyDown(chart,{key:"End"}); expect(screen.getByRole("status")).toHaveTextContent("delta +16 pts; above"); });
+  it("renders HTML legend and long labels in table", () => { render(<TargetLineChart data={targetLineEdgeCases.longLabel} animate={false} />); expect(screen.getByRole("list",{name:"Target line legend"})).toHaveTextContent("Actual"); expect(screen.getByRole("table")).toHaveTextContent("First enterprise reporting interval"); });
+  it("honors reduced motion internally", () => { const mock=vi.spyOn(window,"matchMedia").mockReturnValue({matches:true,media:"",onchange:null,addListener:vi.fn(),removeListener:vi.fn(),addEventListener:vi.fn(),removeEventListener:vi.fn(),dispatchEvent:vi.fn()}); render(<TargetLineChart />); expect(screen.getByRole("group",{name:"Target line interactive chart"})).toHaveAttribute("data-target-animation","false"); mock.mockRestore(); });
+  it("passes axe and SSR", async () => { const {container}=render(<TargetLineChart animate={false}/>); expect((await axe.run(container,{rules:{"color-contrast":{enabled:false}}})).violations).toEqual([]); expect(() => renderToString(<TargetLineChart animate={false}/>)).not.toThrow(); });
+});

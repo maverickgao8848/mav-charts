@@ -1,0 +1,1 @@
+export const divergingBarMetadata = { id: "C08", name: "Diverging Bars", nameZh: "发散条形图", question: "Which categories are positive, negative or unchanged around zero?", questionZh: "哪些类别相对零基线为正、为负或不变？" } as const;

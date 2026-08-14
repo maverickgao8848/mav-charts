@@ -1,0 +1,6 @@
+import { renderToStaticMarkup } from "react-dom/server"; import { describe, expect, it } from "vitest"; import { getVisualSystem } from "@mav-charts/themes"; import { nestedTreemapEdgeCases, nestedTreemapExample } from "../example-data"; import { NestedTreemapChart, NestedTreemapGeometry } from "../index";
+describe("F05 component", () => {
+  it("renders nested totals, legend and table", () => { const html = renderToStaticMarkup(<NestedTreemapChart data={nestedTreemapExample} animate={false} />); expect(html).toContain('data-chart-id="F05"'); expect(html).toContain('data-total="100"'); expect(html).toContain('data-parent-count="3"'); expect(html).toContain("Nested treemap leaves"); });
+  it("retains missing paths without area", () => { const html = renderToStaticMarkup(<NestedTreemapGeometry data={nestedTreemapEdgeCases.missing} theme={getVisualSystem("signal")} animate={false} />); expect(html).toContain('data-leaf-count="2"'); expect(html).toContain('data-missing-count="1"'); expect(html).toContain("Missing"); });
+  it("reports empty and invalid", () => { expect(renderToStaticMarkup(<NestedTreemapChart data={[]} animate={false} />)).toContain('data-state="empty"'); expect(renderToStaticMarkup(<NestedTreemapChart data={nestedTreemapEdgeCases.negative} animate={false} />)).toContain('data-state="invalid"'); });
+});

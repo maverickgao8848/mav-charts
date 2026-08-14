@@ -1,0 +1,1 @@
+export const groupedBarMetadata = { id: "C06", name: "Grouped Bars", nameZh: "分组条形图", question: "How do paired same-unit values compare while preserving category order?", questionZh: "保留类别顺序时，两组同单位数值如何配对比较？" } as const;

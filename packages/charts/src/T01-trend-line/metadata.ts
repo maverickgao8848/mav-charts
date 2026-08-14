@@ -1,0 +1,1 @@
+export const trendLineMetadata = { id: "T01", name: "Trend Line", nameZh: "趋势折线图", question: "How does one ordered metric change across equally spaced observations?", questionZh: "单一指标在等距有序观测中如何变化？" } as const;

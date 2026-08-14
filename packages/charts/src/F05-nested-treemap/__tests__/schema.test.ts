@@ -1,0 +1,9 @@
+import { describe, expect, it } from "vitest"; import { nestedTreemapEdgeCases, nestedTreemapExample } from "../example-data"; import { buildNestedTreemapGeometry, getNestedTreemapArea, validateNestedTreemapData } from "../schema";
+describe("F05 nested treemap geometry", () => {
+  it("validates paths and non-negative finite leaves", () => { expect(validateNestedTreemapData(nestedTreemapExample).valid).toBe(true); for (const value of [nestedTreemapEdgeCases.negative, nestedTreemapEdgeCases.invalidDepth, nestedTreemapEdgeCases.blank, nestedTreemapEdgeCases.duplicate, nestedTreemapEdgeCases.nonfinite]) expect(validateNestedTreemapData(value).valid).toBe(false); });
+  it("aggregates parent totals without changing leaf values", () => { const built = buildNestedTreemapGeometry(nestedTreemapExample); expect(built.total).toBe(100); expect(built.roots.map((node) => [node.name, node.value])).toEqual([["Hardware", 48], ["Software", 40], ["Services", 12]]); expect(built.leaves.map((leaf) => leaf.share)).toEqual([.3, .18, .24, .16, .12]); });
+  it("keeps missing and zero outside hierarchy area", () => { const missing = buildNestedTreemapGeometry(nestedTreemapEdgeCases.missing); expect(missing.total).toBe(60); expect(missing.leaves.map((leaf) => leaf.renderable)).toEqual([true, false, true]); expect(buildNestedTreemapGeometry(nestedTreemapEdgeCases.zero).leaves[1].zero).toBe(true); });
+  it("supports genuine third-level and unbalanced paths", () => { expect(buildNestedTreemapGeometry(nestedTreemapEdgeCases.deep).maximumDepth).toBe(3); expect(buildNestedTreemapGeometry(nestedTreemapEdgeCases.unbalanced).maximumDepth).toBe(3); });
+  it("maps aggregated values to area linearly", () => { expect(getNestedTreemapArea(40, 100, 50_000)).toBe(20_000); expect(getNestedTreemapArea(0, 100, 50_000)).toBe(0); });
+});
+

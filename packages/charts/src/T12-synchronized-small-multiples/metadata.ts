@@ -1,0 +1,1 @@
+export const synchronizedSmallMultiplesMetadata = { id: "T12", name: "Synchronized Small Multiples", nameZh: "同步小多图", question: "How do differently scaled metrics change across the same ordered observations?", questionZh: "不同单位和量级的指标在同一组有序观测中如何同步变化？" } as const;

@@ -1,0 +1,2 @@
+import { describe, expect, it } from "vitest"; import { getStackedBarMotion } from "../motion"; import { resolveStackedBarAnimation } from "../index";
+describe("C07 motion", () => { it("stages real series", () => { expect(getStackedBarMotion("signal", true, 1)).toMatchObject({ isAnimationActive: true, animationBegin: 90 }); }); it("supports reduced/capture", () => { expect(resolveStackedBarAnimation(undefined, true)).toBe(false); expect(resolveStackedBarAnimation(false, false)).toBe(false); }); });

@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@mav-charts/themes": ["packages/themes/src/index.ts"],
+      "@mav-charts/motion": ["packages/motion/src/index.ts"],
+      "@mav-charts/catalog": ["packages/catalog/src/index.ts"],
+      "@mav-charts/examples": ["packages/examples/src/index.ts"],
+      "@mav-charts/charts": ["packages/charts/src/index.ts"],
+      "@mav-charts/charts/*": ["packages/charts/src/*/index.tsx"]
+    },
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": ["src", "packages", "tests", "vite.config.js", "vitest.config.ts"]
+}

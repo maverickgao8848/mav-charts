@@ -1,0 +1,1 @@
+export const percentStackedMetadata = { id: "C09", name: "100% Stacked", nameZh: "百分比堆叠图", question: "How does two-part composition differ across categories?", questionZh: "各类别的两部分比例结构有何差异？" } as const;

@@ -1,0 +1,14 @@
+{
+  "name": "@mav-charts/catalog",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/maverickgao8848/mav-charts.git", "directory": "packages/catalog" },
+  "type": "module",
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+  },
+  "dependencies": { "@mav-charts/themes": "0.1.0" },
+  "scripts": { "prepack": "npm --prefix ../.. run build:packages" },
+  "publishConfig": { "access": "public" }
+}

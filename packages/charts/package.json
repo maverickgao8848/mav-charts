@@ -1,0 +1,25 @@
+{
+  "name": "@mav-charts/charts",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/maverickgao8848/mav-charts.git", "directory": "packages/charts" },
+  "type": "module",
+  "sideEffects": false,
+  "files": ["dist"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./*": { "types": "./dist/*/index.d.ts", "import": "./dist/*/index.js" }
+  },
+  "dependencies": {
+    "@mav-charts/catalog": "0.1.0",
+    "@mav-charts/motion": "0.1.0",
+    "@mav-charts/themes": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20",
+    "recharts": ">=3 <4"
+  },
+  "scripts": { "prepack": "npm --prefix ../.. run build:packages" },
+  "publishConfig": { "access": "public" }
+}

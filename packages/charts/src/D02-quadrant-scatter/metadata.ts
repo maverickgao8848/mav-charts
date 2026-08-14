@@ -1,0 +1,1 @@
+export const quadrantScatterMetadata = { id: "D02", name: "Quadrant Scatter", nameZh: "象限散点图", question: "Where does each item sit relative to two explicit thresholds?", questionZh: "每个对象相对两个明确阈值位于哪个象限？" } as const;

@@ -1,0 +1,1 @@
+export const histogramMetadata = { id: "D07", name: "Histogram", nameZh: "直方图", question: "How are observations distributed across continuous equal-width intervals?", questionZh: "观测值在连续等宽区间中如何分布？" } as const;

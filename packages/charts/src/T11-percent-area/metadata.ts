@@ -1,0 +1,1 @@
+export const percentAreaMetadata = { id: "T11", name: "Percent Area", nameZh: "百分比面积图", question: "How does a two-part composition change over ordered observations?", questionZh: "两部分构成比例如何随有序观察点变化？" } as const;

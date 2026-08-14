@@ -1,0 +1,1 @@
+import { describe, expect, it } from "vitest"; import { getNestedTreemapMotion } from "../motion"; describe("F05 motion", () => { it("supports animated and static frames", () => { expect(getNestedTreemapMotion("signal", true).isAnimationActive).toBe(true); expect(getNestedTreemapMotion("digital", false).isAnimationActive).toBe(false); }); });

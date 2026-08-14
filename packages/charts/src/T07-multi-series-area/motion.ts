@@ -1,0 +1,14 @@
+import type { VisualSystemId } from "@mav-charts/themes";
+const durations: Record<VisualSystemId, number> = {
+  signal: 700,
+  editorial: 850,
+  digital: 980,
+};
+export const getMultiSeriesAreaMotion = (
+  system: VisualSystemId,
+  enabled: boolean,
+) => ({
+  isAnimationActive: enabled,
+  animationDuration: durations[system],
+  animationEasing: "ease-out" as const,
+});

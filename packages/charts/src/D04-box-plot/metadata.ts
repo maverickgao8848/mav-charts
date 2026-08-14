@@ -1,0 +1,1 @@
+export const boxPlotMetadata = { id: "D04", name: "Box Plot", nameZh: "箱线图", question: "How do median, quartiles, range and outliers differ across categories?", questionZh: "各类别的中位数、四分位距、范围和离群值有何差异？" } as const;

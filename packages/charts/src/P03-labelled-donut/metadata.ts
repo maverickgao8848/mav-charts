@@ -1,0 +1,1 @@
+export const labelledDonutMetadata = { id: "P03", name: "Labelled Donut", nameZh: "直接标签环形图", question: "How is a whole divided when every slice needs a direct label?", questionZh: "当每个扇区都需要直接标注时，整体如何构成？" } as const;

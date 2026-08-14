@@ -1,0 +1,1 @@
+export const stackedBarMetadata = { id: "C07", name: "Stacked Bars", nameZh: "堆叠条形图", question: "How do absolute totals and composition compare across ordered categories?", questionZh: "各有序类别的绝对总量与构成如何比较？" } as const;

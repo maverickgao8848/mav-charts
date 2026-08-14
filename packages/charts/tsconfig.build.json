@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "@mav-charts/themes": ["packages/themes/dist/index.d.ts"],
+      "@mav-charts/motion": ["packages/motion/dist/index.d.ts"],
+      "@mav-charts/catalog": ["packages/catalog/dist/index.d.ts"],
+      "@mav-charts/examples": ["packages/examples/dist/index.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/**/__tests__/**"]
+}
