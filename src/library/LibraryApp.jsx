@@ -121,35 +121,45 @@ function SiteFooter() {
   return <footer className="library-footer"><span>MAV CHARTS / {VERSION} 预览版</span><span>图表目录与源码同步 · COMMIT {COMMIT}</span></footer>;
 }
 
+function HeatmapCrystal({ className = "" }) {
+  return (
+    <div className={`heatmap-crystal ${className}`.trim()} aria-hidden="true">
+      <img src={`${import.meta.env.BASE_URL}catalog/D08-signal.png`} alt="" />
+    </div>
+  );
+}
+
+function PageMasthead({ eyebrow, title, copy }) {
+  return (
+    <header className="page-masthead">
+      <span>{eyebrow}</span>
+      <h1>{title}</h1>
+      <p>{copy}</p>
+      <HeatmapCrystal className="masthead-crystal" />
+    </header>
+  );
+}
+
 function HomePage() {
   const featuredIds = ["C10", "T12", "D03", "F02", "P03", "B01"];
   const featured = featuredIds.map((id) => prototypeCatalog.find((item) => item.id === id)).filter(Boolean);
   return (
     <main className="library-shell home-page">
-      <header className="library-hero">
-        <SiteNav />
-        <div className="library-hero-grid">
-          <div className="library-kicker">开源组件 / RECHARTS 3 / 48 个稳定编号</div>
-          <h1>找到一张<br />说真话的图表。</h1>
-          <p>Production React charts organized by the business question—not by a gallery of technical primitives.</p>
-          <div className="library-proof" aria-label="图表库概况"><span><strong>48</strong> 个图表模板</span><span><strong>03</strong> 套视觉系统</span><span><strong>641</strong> 项自动检查</span></div>
-          <a className="site-primary-cta" href={href("/library")}>EXPLORE THE LIBRARY <span>↗</span></a>
+      <SiteNav />
+      <section className="system-manifesto home-system-manifesto" aria-labelledby="systems-heading">
+        <div className="system-intro-heading">
+          <div><div className="section-index">01 / 视觉系统</div><h2 id="systems-heading">MAV<br />数据图表库。</h2></div>
+          <div className="library-proof" aria-label="图表库概况"><span><strong>48</strong> 个稳定模板</span><span><strong>3</strong> 套视觉系统</span><span><strong>5</strong> 大专题</span></div>
         </div>
-        <div className="library-redline" aria-hidden="true"><span>语义优先</span><span>忠实比例</span><span>真实组件</span></div>
-      </header>
-
-      <section className="system-manifesto" aria-labelledby="systems-heading">
-        <div className="section-index">01 / 视觉系统</div>
-        <h2 id="systems-heading">同一种含义。<br />三种表达。</h2>
         <div className="system-manifesto-grid">
-          <article className="system-tile is-signal"><span>01 / 信号</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D03-signal.png`} alt="Signal 风格气泡象限图" /><h3>Signal</h3><p>黑色场域、强烈红色与斜体结论，让唯一重点第一时间被看见。</p></article>
-          <article className="system-tile is-editorial"><span>02 / 编辑</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D03-editorial.png`} alt="Editorial 风格气泡象限图" /><h3>Editorial</h3><p>清晰网格、硬朗边界与纸面层级，适合报告、出版与正式演示。</p></article>
-          <article className="system-tile is-digital"><span>03 / 数字</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D03-digital.png`} alt="Digital 风格气泡象限图" /><h3>Digital</h3><p>近黑仪表界面、细密刻度与冷静信息密度，适合实时产品与研究场景。</p></article>
+          <article className="system-tile is-signal"><span>01 / 信号</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/C11-signal.png`} alt="Signal 风格哑铃图" /><h3>Signal</h3><p>哑铃图 / 黑色场域、强烈红色与斜体结论，让差距第一时间被看见。</p></article>
+          <article className="system-tile is-editorial"><span>02 / 编辑</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D08-editorial.png`} alt="Editorial 风格热力图" /><h3>Editorial</h3><p>热力图 / 清晰网格、硬朗边界与纸面层级，适合报告、出版与正式演示。</p></article>
+          <article className="system-tile is-digital"><span>03 / 数字</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/F05-digital.png`} alt="Digital 风格嵌套矩形树图" /><h3>Digital</h3><p>嵌套矩形树图 / 近黑仪表界面与冷静信息密度，适合实时产品与研究场景。</p></article>
         </div>
       </section>
 
       <section className="featured-section">
-        <div className="section-heading"><div><span>02 / SELECTED WORK</span><h2>Six ways to make<br />the point visible.</h2></div><a href={href("/library")}>VIEW ALL 48 ↗</a></div>
+        <div className="section-heading"><div><span>02 / SELECTED WORK</span><h2>Six ways to make<br />the point visible.</h2></div><a className="library-browse-cta" href={href("/library")}>浏览图表库 <span>→</span></a></div>
         <div className="library-grid featured-grid">{featured.map((item, index) => <ChartCard key={item.id} item={item} index={index} />)}</div>
       </section>
 
@@ -167,30 +177,21 @@ function HomePageZh() {
   const featured = featuredIds.map((id) => prototypeCatalog.find((item) => item.id === id)).filter(Boolean);
   return (
     <main className="library-shell home-page">
-      <header className="library-hero">
-        <SiteNav />
-        <div className="library-hero-grid">
-          <div className="library-kicker">开源组件 / RECHARTS 3 / 48 个稳定编号</div>
-          <h1>找到一张<br />说真话的图表。</h1>
-          <p>48 个可直接用于生产的 React 图表，按你要回答的业务问题组织，而不是堆砌技术图形。</p>
-          <div className="library-proof" aria-label="图表库概况"><span><strong>48</strong> 个稳定模板</span><span><strong>03</strong> 套视觉系统</span><span><strong>641</strong> 项自动检查</span></div>
-          <a className="site-primary-cta" href={href("/library")}>浏览图表库 <span>→</span></a>
+      <SiteNav />
+      <section className="system-manifesto home-system-manifesto" aria-labelledby="systems-heading-zh">
+        <div className="system-intro-heading">
+          <div><div className="section-index">01 / 视觉系统</div><h2 id="systems-heading-zh">MAV<br />数据图表库。</h2></div>
+          <div className="library-proof" aria-label="图表库概况"><span><strong>48</strong> 个稳定模板</span><span><strong>3</strong> 套视觉系统</span><span><strong>5</strong> 大专题</span></div>
         </div>
-        <div className="library-redline" aria-hidden="true"><span>语义优先</span><span>忠实比例</span><span>真实组件</span></div>
-      </header>
-
-      <section className="system-manifesto" aria-labelledby="systems-heading-zh">
-        <div className="section-index">01 / 视觉系统</div>
-        <h2 id="systems-heading-zh">同一种含义。<br />三种表达。</h2>
         <div className="system-manifesto-grid">
-          <article className="system-tile is-signal"><span>01 / 信号</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D03-signal.png`} alt="Signal 风格气泡象限图" /><h3>Signal</h3><p>黑色场域、强烈红色与斜体结论，让唯一重点第一时间被看见。</p></article>
-          <article className="system-tile is-editorial"><span>02 / 编辑</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D03-editorial.png`} alt="Editorial 风格气泡象限图" /><h3>Editorial</h3><p>清晰网格、硬朗边界与纸面层级，适合报告、出版与正式演示。</p></article>
-          <article className="system-tile is-digital"><span>03 / 数字</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D03-digital.png`} alt="Digital 风格气泡象限图" /><h3>Digital</h3><p>近黑仪表界面、细密刻度与冷静信息密度，适合实时产品与研究场景。</p></article>
+          <article className="system-tile is-signal"><span>01 / 信号</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/C11-signal.png`} alt="Signal 风格哑铃图" /><h3>Signal</h3><p>哑铃图 / 黑色场域、强烈红色与斜体结论，让差距第一时间被看见。</p></article>
+          <article className="system-tile is-editorial"><span>02 / 编辑</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/D08-editorial.png`} alt="Editorial 风格热力图" /><h3>Editorial</h3><p>热力图 / 清晰网格、硬朗边界与纸面层级，适合报告、出版与正式演示。</p></article>
+          <article className="system-tile is-digital"><span>03 / 数字</span><img className="system-preview" src={`${import.meta.env.BASE_URL}catalog/F05-digital.png`} alt="Digital 风格嵌套矩形树图" /><h3>Digital</h3><p>嵌套矩形树图 / 近黑仪表界面与冷静信息密度，适合实时产品与研究场景。</p></article>
         </div>
       </section>
 
       <section className="featured-section">
-        <div className="section-heading"><div><span>02 / 精选图表</span><h2>六种方式，<br />让观点被看见。</h2></div><a href={href("/library")}>查看全部 48 个 →</a></div>
+        <div className="section-heading"><div><span>02 / 精选图表</span><h2>六种方式，<br />让观点被看见。</h2></div><a className="library-browse-cta" href={href("/library")}>浏览图表库 <span>→</span></a></div>
         <div className="library-grid featured-grid">{featured.map((item, index) => <ChartCard key={item.id} item={item} index={index} />)}</div>
       </section>
 
@@ -227,7 +228,7 @@ function CatalogPage() {
   return (
     <main className="library-shell catalog-page">
       <SiteNav compact />
-      <header className="page-masthead"><span>完整索引 / 48</span><h1>图表<br />资料库。</h1><p>按稳定编号、表达目的或使用对象搜索。切换视觉系统，不改变数据本身的叙事。</p></header>
+      <PageMasthead eyebrow="完整索引 / 48" title={<>图表<br />资料库。</>} copy="按稳定编号、表达目的或使用对象搜索。切换视觉系统，不改变数据本身的叙事。" />
       <section className="library-controls" aria-label="图表筛选">
         <label className="library-search"><span>搜索</span><input value={query} onChange={(event) => change("query", event.target.value)} placeholder="图表编号、名称或业务问题…" /></label>
         <label><span>表达目的</span><select value={question} onChange={(event) => change("question", event.target.value)}><option value="all">全部问题</option>{Object.entries(questionLabels).map(([value, label]) => <option value={value} key={value}>{label}</option>)}</select></label>
@@ -297,7 +298,7 @@ function CollectionPage({ audience }) {
   return (
     <main className="library-shell collection-page">
       <SiteNav compact />
-      <header className="page-masthead"><span>场景集合 / {audienceLabels[audience]}</span><h1>为{audienceLabels[audience]}<br />而选。</h1><p>从同一份目录中筛选出 {items.length} 个相关模板。集合只做筛选，不复制或分叉图表元数据。</p></header>
+      <PageMasthead eyebrow={<>场景集合 / {audienceLabels[audience]}</>} title={<>为{audienceLabels[audience]}<br />而选。</>} copy={<>从同一份目录中筛选出 {items.length} 个相关模板。集合只做筛选，不复制或分叉图表元数据。</>} />
       <nav className="collection-tabs" aria-label="使用对象集合">{audiences.map((entry) => <a key={entry} aria-current={entry === audience ? "page" : undefined} href={href(`/collections/${entry}`)}>{audienceLabels[entry]}</a>)}</nav>
       <section className="library-grid">{items.map((item, index) => <ChartCard key={item.id} item={item} index={index} />)}</section>
       <SiteFooter />
@@ -312,11 +313,11 @@ function GuidesPage() {
     ["03", "无障碍可用", "每个模板同时支持指针与键盘交互，并提供屏幕阅读器表格、对比度检查和清晰的减弱动效状态。"],
     ["04", "有意义的动效", "动效只解释进入与变化，绝不改变编码值。截图模式和减弱动效偏好都会直接呈现完整首帧。"],
   ];
-  return <main className="library-shell guide-page"><SiteNav compact /><header className="page-masthead"><span>FIELD MANUAL / 04 PRINCIPLES</span><h1>Choose well.<br />Show honestly.</h1><p>A compact operating guide for teams selecting, reviewing and shipping data graphics.</p></header><section className="guide-grid">{guides.map(([index, title, copy]) => <article key={index}><span>{index}</span><h2>{title}</h2><p>{copy}</p>{index === "01" ? <div className="guide-links">{Object.entries(questionLabels).map(([key, value]) => <a key={key} href={href(`/library?question=${key}`)}>{value} ↗</a>)}</div> : null}</article>)}</section><SiteFooter /></main>;
+  return <main className="library-shell guide-page"><SiteNav compact /><PageMasthead eyebrow="FIELD MANUAL / 04 PRINCIPLES" title={<>Choose well.<br />Show honestly.</>} copy="A compact operating guide for teams selecting, reviewing and shipping data graphics." /><section className="guide-grid">{guides.map(([index, title, copy]) => <article key={index}><span>{index}</span><h2>{title}</h2><p>{copy}</p>{index === "01" ? <div className="guide-links">{Object.entries(questionLabels).map(([key, value]) => <a key={key} href={href(`/library?question=${key}`)}>{value} ↗</a>)}</div> : null}</article>)}</section><SiteFooter /></main>;
 }
 
 function AboutPage() {
-  return <main className="library-shell about-page"><SiteNav compact /><header className="page-masthead"><span>OPEN SOURCE / MIT</span><h1>Charts are<br />public infrastructure.</h1><p>MAV Charts is a typed Recharts library, a tested visual system and a catalog-driven website maintained as one product.</p></header><section className="about-grid"><article><span>01 / REPOSITORY</span><h2>Inspect every decision.</h2><p>All 48 stable IDs, schemas, examples, tests, visual baselines and documentation live in the public repository.</p><a href={REPOSITORY}>OPEN GITHUB ↗</a></article><article><span>02 / LICENSES</span><h2>Clear provenance.</h2><p>The project is MIT licensed. Recharts, bundled fonts and other third-party notices remain documented alongside the source.</p><a href={`${REPOSITORY}/blob/main/THIRD_PARTY_LICENSES.md`}>THIRD-PARTY LICENSES ↗</a></article><article><span>03 / CONTRIBUTE</span><h2>Make the contract stronger.</h2><p>Contributions start with truthful geometry, accessible interaction and visual evidence—not a screenshot alone.</p><a href={`${REPOSITORY}/blob/main/CONTRIBUTING.md`}>CONTRIBUTING GUIDE ↗</a></article></section><SiteFooter /></main>;
+  return <main className="library-shell about-page"><SiteNav compact /><PageMasthead eyebrow="OPEN SOURCE / MIT" title={<>Charts are<br />public infrastructure.</>} copy="MAV Charts is a typed Recharts library, a tested visual system and a catalog-driven website maintained as one product." /><section className="about-grid"><article><span>01 / REPOSITORY</span><h2>Inspect every decision.</h2><p>All 48 stable IDs, schemas, examples, tests, visual baselines and documentation live in the public repository.</p><a href={REPOSITORY}>OPEN GITHUB ↗</a></article><article><span>02 / LICENSES</span><h2>Clear provenance.</h2><p>The project is MIT licensed. Recharts, bundled fonts and other third-party notices remain documented alongside the source.</p><a href={`${REPOSITORY}/blob/main/THIRD_PARTY_LICENSES.md`}>THIRD-PARTY LICENSES ↗</a></article><article><span>03 / CONTRIBUTE</span><h2>Make the contract stronger.</h2><p>Contributions start with truthful geometry, accessible interaction and visual evidence—not a screenshot alone.</p><a href={`${REPOSITORY}/blob/main/CONTRIBUTING.md`}>CONTRIBUTING GUIDE ↗</a></article></section><SiteFooter /></main>;
 }
 
 function GuidesPageZh() {
@@ -326,11 +327,11 @@ function GuidesPageZh() {
     ["03", "无障碍可用", "每个模板同时支持指针与键盘交互，并提供屏幕阅读器表格、对比度检查和清晰的减弱动效状态。"],
     ["04", "有意义的动效", "动效只解释进入与变化，绝不改变编码值。截图模式和减弱动效偏好都会直接呈现完整首帧。"],
   ];
-  return <main className="library-shell guide-page"><SiteNav compact /><header className="page-masthead"><span>使用手册 / 04 条原则</span><h1>选得准确。<br />表达诚实。</h1><p>一份简明操作指南，帮助团队选择、审阅并发布数据图形。</p></header><section className="guide-grid">{guides.map(([index, title, copy]) => <article key={index}><span>{index}</span><h2>{title}</h2><p>{copy}</p>{index === "01" ? <div className="guide-links">{Object.entries(questionLabels).map(([key, value]) => <a key={key} href={href(`/library?question=${key}`)}>{value} →</a>)}</div> : null}</article>)}</section><SiteFooter /></main>;
+  return <main className="library-shell guide-page"><SiteNav compact /><PageMasthead eyebrow="使用手册 / 04 条原则" title={<>选得准确。<br />表达诚实。</>} copy="一份简明操作指南，帮助团队选择、审阅并发布数据图形。" /><section className="guide-grid">{guides.map(([index, title, copy]) => <article key={index}><span>{index}</span><h2>{title}</h2><p>{copy}</p>{index === "01" ? <div className="guide-links">{Object.entries(questionLabels).map(([key, value]) => <a key={key} href={href(`/library?question=${key}`)}>{value} →</a>)}</div> : null}</article>)}</section><SiteFooter /></main>;
 }
 
 function AboutPageZh() {
-  return <main className="library-shell about-page"><SiteNav compact /><header className="page-masthead"><span>开源项目 / MIT</span><h1>图表也是<br />公共基础设施。</h1><p>MAV Charts 把类型化 Recharts 组件、经过验证的视觉系统和目录驱动网站维护为同一个产品。</p></header><section className="about-grid"><article><span>01 / 代码仓库</span><h2>查看每一个决定。</h2><p>48 个稳定编号、数据结构、示例、测试、视觉基线和文档都在公开仓库中。</p><a href={REPOSITORY}>打开 GitHub ↗</a></article><article><span>02 / 开源许可</span><h2>来源清晰。</h2><p>项目采用 MIT 许可证。Recharts、内置字体和其他第三方声明均与源码一起记录。</p><a href={`${REPOSITORY}/blob/main/THIRD_PARTY_LICENSES.md`}>查看第三方许可 ↗</a></article><article><span>03 / 参与贡献</span><h2>让约定更可靠。</h2><p>贡献从真实比例、无障碍交互和可验证的视觉证据开始，而不只是一张截图。</p><a href={`${REPOSITORY}/blob/main/CONTRIBUTING.md`}>阅读贡献指南 ↗</a></article></section><SiteFooter /></main>;
+  return <main className="library-shell about-page"><SiteNav compact /><PageMasthead eyebrow="开源项目 / MIT" title={<>图表也是<br />公共基础设施。</>} copy="MAV Charts 把类型化 Recharts 组件、经过验证的视觉系统和目录驱动网站维护为同一个产品。" /><section className="about-grid"><article><span>01 / 代码仓库</span><h2>查看每一个决定。</h2><p>48 个稳定编号、数据结构、示例、测试、视觉基线和文档都在公开仓库中。</p><a href={REPOSITORY}>打开 GitHub ↗</a></article><article><span>02 / 开源许可</span><h2>来源清晰。</h2><p>项目采用 MIT 许可证。Recharts、内置字体和其他第三方声明均与源码一起记录。</p><a href={`${REPOSITORY}/blob/main/THIRD_PARTY_LICENSES.md`}>查看第三方许可 ↗</a></article><article><span>03 / 参与贡献</span><h2>让约定更可靠。</h2><p>贡献从真实比例、无障碍交互和可验证的视觉证据开始，而不只是一张截图。</p><a href={`${REPOSITORY}/blob/main/CONTRIBUTING.md`}>阅读贡献指南 ↗</a></article></section><SiteFooter /></main>;
 }
 
 function NotFoundZh() {
