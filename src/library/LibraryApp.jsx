@@ -20,6 +20,35 @@ const questionLabels = {
 
 const systemLabels = { signal: "信号", editorial: "编辑", digital: "数字" };
 const audienceLabels = { consulting: "咨询", finance: "金融", product: "产品", marketing: "市场", operations: "运营" };
+const scenarioLabels = { report: "报告", dashboard: "仪表板", web: "网页", video: "视频" };
+
+const questionGuidance = {
+  compare: { fit: "比较不同类别、对象或方案之间的高低与差距。", avoid: "不适合讲述长时间变化，也不适合说明各部分占整体的比例。" },
+  trend: { fit: "观察指标随时间或有序阶段怎样变化。", avoid: "不适合只比较几个互不相关的类别，也不适合表达整体构成。" },
+  composition: { fit: "说明一个整体由哪些部分组成，以及各部分所占比例。", avoid: "不适合精确比较非常接近的数值，也不要混入彼此重叠的类别。" },
+  distribution: { fit: "查看数据集中、分散、偏斜或异常值出现在哪里。", avoid: "不适合强调单个对象的精确排名，也不用于讲述时间变化。" },
+  relationship: { fit: "判断两个或多个变量之间是否存在关联、分组或异常点。", avoid: "不适合表达时间顺序、流程阶段或整体构成。" },
+  flow: { fit: "展示数量如何在明确的阶段、节点或分支之间流动。", avoid: "没有明确流向关系的数据不要使用，也不要把普通分类比较包装成流程。" },
+  progress: { fit: "展示当前值距离明确目标、区间或完成状态还有多远。", avoid: "没有明确目标或合理上限时不要使用，以免制造虚假的进度感。" },
+};
+
+const fieldLabels = {
+  label: "名称", value: "数值", detail: "说明", comparison: "对比值", primary: "主要数值",
+  target: "目标值", actual: "实际值", min: "最小值", max: "最大值", low: "最低值", high: "最高值",
+  open: "开盘值", close: "收盘值", median: "中位数", q1: "下四分位数", q3: "上四分位数",
+  x: "横轴数值", y: "纵轴数值", size: "大小", start: "开始", end: "结束", source: "来源节点",
+  path: "层级路径", id: "唯一编号", title: "标题", unit: "单位", data: "数据列表", event: "事件说明",
+};
+
+const fieldDescriptions = {
+  label: "每条数据的名称，不能为空或重复。", value: "用于绘图的主要数字；缺失时请留空，不要写成 0。", detail: "可选的补充说明，方便 Agent 生成提示和无障碍文本。",
+  comparison: "与主要数值使用相同单位的对比数字。", primary: "图表重点表达的主要数字。", target: "与实际值使用相同单位的目标。",
+  actual: "当前真实结果。", min: "允许或观察到的最小值。", max: "允许或观察到的最大值。", low: "区间或交易期内的最低值。",
+  high: "区间或交易期内的最高值。", open: "交易期开始时的值。", close: "交易期结束时的值。", median: "排序后位于中间的数值。",
+  q1: "25% 位置的数值。", q3: "75% 位置的数值。", x: "决定横向位置的数字。", y: "决定纵向位置的数字。", size: "决定图形面积或大小的数字。",
+  start: "阶段或区间的开始位置。", end: "阶段或区间的结束位置。", source: "流向从哪个节点开始。", path: "从上到下的层级名称列表。",
+  id: "供程序识别的稳定编号。", title: "这一组数据的标题。", unit: "所有可比较数值共同使用的单位。", data: "这一组图表使用的记录。", event: "需要在图上标记的事件。",
+};
 
 const sourceFiles = import.meta.glob("../../packages/charts/src/*/index.tsx", { query: "?raw", import: "default", eager: true });
 const schemaFiles = import.meta.glob("../../packages/charts/src/*/schema.ts", { query: "?raw", import: "default", eager: true });
@@ -48,10 +77,13 @@ function exampleName(item) {
   return source.match(/export const\s+(\w*[Ee]xample)\b/)?.[1] || "exampleData";
 }
 
-function misuseLines(item) {
-  const readme = artifact(readmeFiles, item);
-  const matches = readme.split(/\r?\n/).filter((line) => /do not|don.t use|avoid|instead|不要|不适合|避免|替代|误用/i.test(line));
-  return matches.slice(0, 6).map((line) => line.replace(/^[-#*\s]+/, "")).filter(Boolean);
+function dataFields(item) {
+  const schema = artifact(schemaFiles, item);
+  const datum = schema.match(/export type\s+\w*Datum\s*=\s*\{([\s\S]*?)\};/i)?.[1]
+    || schema.match(/export interface\s+\w*Datum\s*\{([\s\S]*?)\}/i)?.[1]
+    || "";
+  const fields = [...datum.matchAll(/^\s*(\w+)\??:\s*([^;]+);/gm)].map((match) => ({ key: match[1], type: match[2].trim() }));
+  return (fields.length ? fields : [{ key: "label", type: "string" }, { key: "value", type: "number | null" }, { key: "detail", type: "string（可选）" }]).slice(0, 7);
 }
 
 function useRoute() {
@@ -110,7 +142,7 @@ function ChartCard({ item, system = "signal", index = 0 }) {
       <div className="library-card-taxonomy" aria-label="Chart tags">
         <span><b>问题</b>{item.questions.map((entry) => questionLabels[entry]).join(" · ")}</span>
         <span><b>对象</b>{item.audiences.slice(0, 3).map((entry) => audienceLabels[entry] || entry).join(" · ")}</span>
-        <span><b>场景</b>{item.scenarios.join(" · ")}</span>
+        <span><b>场景</b>{item.scenarios.map((entry) => scenarioLabels[entry] || entry).join(" · ")}</span>
       </div>
       <footer><a href={href(`/charts/${item.id}?system=${system}`)}>查看图表</a><a href={sourceUrl}>GitHub 源码</a></footer>
     </article>
@@ -246,47 +278,72 @@ function DetailPage({ id }) {
   const item = prototypeCatalog.find((entry) => entry.id.toLowerCase() === id.toLowerCase());
   const initialSystem = new URLSearchParams(window.location.search).get("system") || "signal";
   const [system, setSystem] = React.useState(systems.includes(initialSystem) ? initialSystem : "signal");
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = React.useState("");
   if (!item) return <NotFoundZh />;
   const directory = item.githubPath.split("/").at(-2);
   const chartComponent = componentName(item);
   const dataExport = exampleName(item);
   const code = `import { ${chartComponent}, ${dataExport} } from "@mav-charts/charts/${directory}";\n\nexport function Example() {\n  return (\n    <${chartComponent}\n      data={${dataExport}}\n      visualSystem="${system}"\n    />\n  );\n}`;
+  const guide = questionGuidance[item.questions[0]] || questionGuidance.compare;
+  const fields = dataFields(item);
+  const agentPrompt = `请使用 MAV Charts 的 ${item.id}「${item.nameZh}」绘制图表。\n\n要回答的问题：${item.descriptionZh}\n视觉风格：${systemLabels[system]}（${system}）\n使用场景：${item.scenarios.map((entry) => scenarioLabels[entry] || entry).join("、")}\n数据要求：${fields.map(({ key }) => fieldLabels[key] || key).join("、")}。缺失值请保留为空，不要自动转换为 0。\n\n请先检查数据是否适合这种图表，再生成可运行的 React + TypeScript 代码。`;
   const sourceUrl = `${REPOSITORY}/blob/main/${item.githubPath}`;
   const issueUrl = `${REPOSITORY}/issues/new?title=${encodeURIComponent(`[${item.id}] `)}`;
   const alternatives = prototypeCatalog.filter((candidate) => candidate.id !== item.id && candidate.questions.some((question) => item.questions.includes(question))).slice(0, 3);
-  const warnings = misuseLines(item);
   const setVisualSystem = (next) => {
     setSystem(next);
     window.history.replaceState(null, "", `${href(`/charts/${item.id}`)}?system=${next}`);
   };
-  const copy = async () => { await navigator.clipboard.writeText(code); setCopied(true); window.setTimeout(() => setCopied(false), 1600); };
+  const copy = async (kind, content) => { await navigator.clipboard.writeText(content); setCopied(kind); window.setTimeout(() => setCopied(""), 1600); };
+  const previewParams = new URLSearchParams({ template: item.id, theme: system, capture: "", embed: "1", lang: "zh", chartTitle: item.descriptionZh, chartSubtitle: item.nameZh, chartDescription: guide.fit, chartSource: `${systemLabels[system]} · ${item.nameZh}` });
   return (
     <main className="library-shell detail-page" data-library-detail={item.id}>
       <SiteNav compact />
       <header className="detail-header">
         <div className="detail-id">{item.id}</div>
-        <div><span>{item.questions.map((question) => questionLabels[question]).join(" / ")}</span><h1>{defaultHeadline(item)}</h1><p>{item.name} · {item.nameZh}</p></div>
+        <div><span>{item.questions.map((question) => questionLabels[question]).join(" / ")}</span><h1>{item.descriptionZh}</h1><p>{item.nameZh} · {item.id}</p></div>
         <div className="detail-version"><span>版本</span><strong>v{VERSION}</strong><small>提交 {COMMIT}</small></div>
       </header>
       <section className="detail-stage">
-        <div className="detail-toolbar"><SystemSwitch value={system} onChange={setVisualSystem} /><a href={sourceUrl}>OPEN SOURCE ↗</a></div>
-        <iframe title={`${item.name} live ${system} preview`} src={`${import.meta.env.BASE_URL}?template=${item.id}&theme=${system}&capture&embed=1`} loading="eager" />
+        <div className="detail-toolbar"><SystemSwitch value={system} onChange={setVisualSystem} /><a href={sourceUrl}>查看源代码 ↗</a></div>
+        <iframe title={`${item.nameZh}，${systemLabels[system]}视觉预览`} src={`${import.meta.env.BASE_URL}?${previewParams}`} loading="eager" />
       </section>
       <section className="detail-facts">
         <div><span>表达什么</span><strong>{item.questions.map((entry) => questionLabels[entry]).join(" · ")}</strong></div>
         <div><span>适合谁</span><strong>{item.audiences.map((entry) => audienceLabels[entry] || entry).join(" · ")}</strong></div>
-        <div><span>使用场景</span><strong>{item.scenarios.join(" · ")}</strong></div>
-        <div><span>图形引擎</span><strong>{item.primitive.join(" + ")}</strong></div>
+        <div><span>使用场景</span><strong>{item.scenarios.map((entry) => scenarioLabels[entry] || entry).join(" · ")}</strong></div>
+        <div><span>技术基础</span><strong>基于 Recharts</strong></div>
       </section>
-      <section className="detail-documentation">
-        <article><div className="doc-label">01 / 数据结构</div><h2>数据约定。</h2><p>这里直接展示模板的源数据结构，不维护另一份网站文案。</p><pre tabIndex={0}><code>{artifact(schemaFiles, item)}</code></pre></article>
-        <article><div className="doc-label">02 / 示例数据</div><h2>可运行的输入。</h2><pre tabIndex={0}><code>{artifact(exampleFiles, item)}</code></pre></article>
-        <article className="code-example"><div className="doc-label">03 / REACT + TYPESCRIPT</div><h2>使用这个组件。</h2><button type="button" onClick={copy}>{copied ? "已复制" : "复制代码"}</button><pre tabIndex={0}><code>{code}</code></pre></article>
-        <article><div className="doc-label">04 / 谨慎使用</div><h2>避免误用。</h2>{warnings.length ? <ul>{warnings.map((warning) => <li key={warning}>{warning}</li>)}</ul> : <p>选用这种编码前请阅读模板指南；缺失值、单位和比例尺边界都必须明确表达。</p>}<details><summary>阅读完整双语模板指南</summary><pre tabIndex={0}><code>{artifact(readmeFiles, item)}</code></pre></details></article>
+      <section className="detail-guidance" aria-label={`${item.nameZh}使用说明`}>
+        <article className="usage-guide">
+          <div className="doc-label">01 / 先判断是否合适</div><h2>什么时候用。</h2>
+          <p className="guide-question">当你需要回答“{item.descriptionZh}”时，可以优先考虑这张图。</p>
+          <div className="decision-grid"><div><span>适合</span><p>{guide.fit}</p></div><div><span>不适合</span><p>{guide.avoid}</p></div></div>
+        </article>
+        <article className="data-guide">
+          <div className="doc-label">02 / 整理你的数据</div><h2>准备这样的数据。</h2>
+          <p>不必先理解 TypeScript。按照下面这些字段整理数据，Agent 会负责把它转换成组件需要的格式。</p>
+          <dl className="data-field-list">{fields.map(({ key, type }) => <div key={key}><dt>{fieldLabels[key] || key}</dt><dd>{fieldDescriptions[key] || `按 ${type} 格式提供这一项。`}</dd><code>{key}</code></div>)}</dl>
+          <button className="secondary-copy" type="button" onClick={() => copy("data", artifact(exampleFiles, item))}>{copied === "data" ? "示例数据已复制" : "复制示例数据"}</button>
+        </article>
+        <article className="agent-guide">
+          <div className="doc-label">03 / 交给 AGENT</div><h2>让 Agent 开始制作。</h2>
+          <p>复制下面这段说明，再把你的数据一起发给 Agent。它会先判断数据是否合适，然后生成可运行代码。</p>
+          <pre tabIndex={0}><code>{agentPrompt}</code></pre>
+          <button type="button" onClick={() => copy("agent", agentPrompt)}>{copied === "agent" ? "已复制，可以发给 Agent" : "复制给 Agent"}</button>
+        </article>
+        <details className="technical-details">
+          <summary><span>04 / 技术详情</span><strong>组件接口、完整代码与校验规则</strong><small>供 Agent 和开发者查阅</small></summary>
+          <div className="technical-grid">
+            <section><h3>数据结构</h3><p>组件实际接受的数据类型与校验逻辑。</p><pre tabIndex={0}><code>{artifact(schemaFiles, item)}</code></pre></section>
+            <section><h3>完整示例数据</h3><p>包含正常输入和常见边界情况。</p><pre tabIndex={0}><code>{artifact(exampleFiles, item)}</code></pre></section>
+            <section><h3>React + TypeScript</h3><button type="button" onClick={() => copy("code", code)}>{copied === "code" ? "代码已复制" : "复制代码"}</button><pre tabIndex={0}><code>{code}</code></pre></section>
+            <section><h3>完整模板指南</h3><pre tabIndex={0}><code>{artifact(readmeFiles, item)}</code></pre></section>
+          </div>
+        </details>
       </section>
       <section className="alternative-section"><div><span>05 / 相邻选择</span><h2>也许是这张，<br />也许是旁边那张。</h2></div><div>{alternatives.map((candidate) => <a key={candidate.id} href={href(`/charts/${candidate.id}`)}><span>{candidate.id}</span><strong>{candidate.nameZh}</strong><small>{candidate.descriptionZh || candidate.description}</small></a>)}</div></section>
-      <section className="detail-actions"><a href={sourceUrl}>OPEN GITHUB SOURCE</a><button type="button" onClick={copy}>{copied ? "COPIED" : "COPY CODE"}</button><a href={issueUrl}>REPORT AN ISSUE</a></section>
+      <section className="detail-actions"><a href={sourceUrl}>查看 GitHub 源码</a><button type="button" onClick={() => copy("agent", agentPrompt)}>{copied === "agent" ? "已复制" : "复制给 Agent"}</button><a href={issueUrl}>反馈这个图表</a></section>
       <SiteFooter />
     </main>
   );
