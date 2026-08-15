@@ -17,6 +17,8 @@ Use the MAV Charts runtime bundled inside this skill as the only chart-template 
 - Never invent production data. Use placeholders only after the user authorizes a mockup and label them as placeholders.
 - Ask only for missing information. Reuse data, audience, context, units, and output requirements already supplied.
 - Preserve existing MAV component semantics, tokens, accessibility, and motion behavior.
+- Treat the public MAV Charts website as the user's visual browsing companion. Provide useful website entry links throughout the conversation, not only in the final handoff.
+- Keep the skill operational when the website is unavailable. Use the bundled runtime as the source of truth; use the website for discovery, previews, explanations, and user navigation.
 
 ## Resolve the bundled runtime
 
@@ -36,6 +38,7 @@ node "<SKILL_ROOT>/scripts/materialize-runtime.mjs" --output "<absolute-output-d
 Use the resulting directory as `MAV_WORKDIR`. Run `npm ci` inside `MAV_WORKDIR` when dependencies are absent. Never write user data or generated artifacts back into the installed skill directory.
 
 Read [repository-map.md](references/repository-map.md) when locating files, previews, themes, viewports, or component APIs.
+Read [website-entry-points.md](references/website-entry-points.md) before sharing website links or constructing template/style URLs.
 
 ## Workflow
 
@@ -55,6 +58,8 @@ Infer the intended message, audience, and use context from the request. If the r
 
 Do not ask the user to name a chart type when they only know the business question.
 
+When useful, give the user an immediate visual starting point: the website home page for orientation, the library for browsing, or a relevant audience collection. Do not require the user to browse before continuing the conversation.
+
 ### 2. Recommend from the live MAV catalog
 
 Read `MAV_RUNTIME/packages/catalog/src/catalog.ts`. Match `questions`, `audiences`, `scenarios`, descriptions, and status to the user's goal. Resolve every catalog `githubPath` relative to `MAV_RUNTIME` and verify the component exists.
@@ -64,6 +69,8 @@ Recommend one primary template and at most two meaningful alternatives. For each
 - MAV ID and template name
 - why it fits this request
 - the main tradeoff versus the primary choice
+
+Add a direct website link to every recommended template so the user can see the real chart before choosing. Link alternatives directly too; do not send the user back to the library to search by hand.
 
 Show local catalog previews when they materially help the user choose. Use the actual preview files under `MAV_RUNTIME/public/catalog`; do not fabricate previews.
 
@@ -79,6 +86,8 @@ Ask the user to choose exactly one visual system before rendering:
 
 Show the three real style previews for the selected template when available. You may recommend a style for the user's context, but still require the user to choose. Do not treat silence as consent.
 
+Provide three direct website preview links for the selected template, one each for `signal`, `editorial`, and `digital`, so the user can compare the exact template in all three systems.
+
 Use the exact prop value `signal`, `editorial`, or `digital` after the choice.
 
 ### 4. Inspect the selected template and collect data
@@ -92,6 +101,8 @@ Open the selected component directory under `MAV_RUNTIME` and read, at minimum:
 - `metadata.ts` when present for additional semantics
 
 Translate the schema into a compact user-facing request. Ask for only the required data and missing presentation fields such as unit, series names, date grain, target, source, title, or annotations when those props exist.
+
+Alongside the data request, link to the selected template's website detail page and tell the user that its “什么时候用 / 准备这样的数据 / 让 Agent 开始制作” sections provide a visual explanation. Continue to ask for the data directly in chat; never make website reading a prerequisite.
 
 Prefer accepting an attached spreadsheet/CSV/document or pasted table. If the user has no prepared data, provide a small fill-in table whose columns match the selected schema exactly.
 
@@ -157,5 +168,7 @@ Deliver the artifact and summarize:
 - data source used and any transformations
 - artifact path or code files changed
 - any remaining placeholder or limitation
+
+Include the selected template's website link in the handoff. When it helps the next step, also include one relevant entry such as the full library, usage guide, or audience collection. Avoid dumping every site link when two focused links are enough.
 
 Keep the handoff concise. Do not present unrelated generic chart alternatives after the MAV artifact is complete.

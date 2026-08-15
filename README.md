@@ -1,190 +1,139 @@
 # MAV Charts
 
-MAV Charts 是一个可独立安装的图表制作 Skill，内置基于 React、Recharts 和 TypeScript 的完整 MAV Charts 运行时，以及 **48 个可直接使用的图表模板**。
+不会选图表，也不会写代码？直接把数据和想法交给 **MAV Chart Maker**。
 
-它不是让用户先研究“有哪些图形”，也不会套用外部或旧版模板。用户只要说明想表达什么，`mav-chart-maker` 就会从当前仓库内置模板中推荐合适的图表，要求用户选择 **Signal / Editorial / Digital** 风格，继续索取该模板真正需要的数据和交付形式，最后把图表做出来。
+这是一个可以独立安装的 Codex Skill，内置 48 个 MAV Charts 模板。它会先听懂你想说明什么，再帮你选图、让你挑风格、向你索要真正需要的数据，最后做成图片、PPT、网页或 React 组件。
 
-这个仓库本身就是一个完整 Skill 文件夹。复制到其他仓库或用户 Skill 目录后即可独立工作，不依赖原始 MAV Charts 项目，也不会去宿主仓库寻找模板源码。
+**先逛网站：** [MAV 数据图表库首页](https://maverickgao8848.github.io/mav-charts/) · [浏览全部 48 个图表](https://maverickgao8848.github.io/mav-charts/library) · [看使用指南](https://maverickgao8848.github.io/mav-charts/guides)
 
-## 先看一下效果
+![MAV 数据图表库首页与三种风格](assets/readme/01-home-three-styles.png)
 
-同一个模板可以切换三套视觉系统，数据结构和图表含义不会改变：
+## 它会替你做什么
 
-| Signal | Editorial | Digital |
-|---|---|---|
-| ![Signal 风格](assets/mav-charts/public/catalog/C01-signal.png) | ![Editorial 风格](assets/mav-charts/public/catalog/C01-editorial.png) | ![Digital 风格](assets/mav-charts/public/catalog/C01-digital.png) |
-| 黑底、高对比、一个明确的红色信号，适合汇报、咨询和视频画面 | 硬朗、克制、精确，适合报告、研究和工程内容 | 深色、精细、技术感，适合 AI、SaaS 和监控面板 |
+你不用先知道“应该用柱状图还是雷达图”。只要说清楚一句业务问题，例如：
 
-## 这个 Skill 适合谁
+> 我想比较两个团队在五项能力上的差异，最后放进汇报 PPT。
 
-- 不确定“这组数据该用什么图”的产品经理、设计师或数据分析师
-- 想快速制作经营看板、数据报告、研究页面或视频数据画面的用户
-- 需要在 PowerPoint、图片、网页、React 项目或视频中交付 MAV 图表的团队
-- 想统一图表视觉风格，同时保留真实数据、响应式布局和无障碍能力的开发者
+Skill 会按这个顺序带你完成：
 
-你不需要先知道图表名称。可以只说“我想比较各地区本月销售额”或“我想说明过去 12 个月的增长趋势”。
+1. 从网站和内置目录的 48 个模板里推荐最合适的图。
+2. 给你真实页面链接，让你看到首选和备选长什么样。
+3. 让你明确选择 `Signal`、`Editorial` 或 `Digital`。
+4. 根据所选模板，向你索要对应字段、单位、标题和数据。
+5. 问你想做成图片、PPT、网页、React 组件还是视频画面。
+6. 用真实 MAV 组件制作、检查并交付。
+
+它不会随便编数据，不会把缺失值当成 `0`，也不会换成旧模板或普通图表将就。
+
+## 先看看有没有喜欢的图
+
+[打开完整图表库](https://maverickgao8848.github.io/mav-charts/library)，可以按“对比、趋势、构成、分布、关系、流向、进度”筛选。你不必记英文名称。
+
+下面这一排是[矩形树图](https://maverickgao8848.github.io/mav-charts/charts/F01?system=signal)、[漏斗图](https://maverickgao8848.github.io/mav-charts/charts/F04?system=signal)、[嵌套矩形树图](https://maverickgao8848.github.io/mav-charts/charts/F05?system=signal)和[桑基流向图](https://maverickgao8848.github.io/mav-charts/charts/F02?system=signal)：
+
+![图表库中的矩形树图、漏斗图、嵌套矩形树图和桑基流向图](assets/readme/02-library-flow-row.png)
+
+如果不想自己逛，也可以跳过这一步，直接让 Skill 推荐。
+
+## 三种风格，你来选
+
+- `Signal`：黑底、高对比、红色重点，适合汇报、咨询和视频。
+- `Editorial`：硬朗、克制、精确，适合报告、研究和正式演示。
+- `Digital`：深色、精细、技术感，适合 AI、SaaS 和监控面板。
+
+Skill 可以推荐，但不会替你默选。确定模板后，它会给出三个直达链接，让你在网站上比较同一张图的三种风格。
+
+例如“雷达能力画像 B04”： [Signal](https://maverickgao8848.github.io/mav-charts/charts/B04?system=signal) · [Editorial](https://maverickgao8848.github.io/mav-charts/charts/B04?system=editorial) · [Digital](https://maverickgao8848.github.io/mav-charts/charts/B04?system=digital)
+
+## 一个完整例子：雷达能力画像
+
+如果你想比较两个团队、品牌、方案或人物在共同维度上的差异，Skill 可能会推荐 [B04 雷达能力画像](https://maverickgao8848.github.io/mav-charts/charts/B04?system=signal)。
+
+![雷达能力画像详情页](assets/readme/03-radar-detail.png)
+
+### 1. 先判断适不适合
+
+每个图表详情页都会直接告诉你“什么时候用”和“不适合什么”。
+
+![雷达能力画像什么时候用](assets/readme/04-radar-when-to-use.png)
+
+### 2. 按提示准备数据
+
+不用懂 TypeScript。以雷达能力画像为例，只要准备名称、数值、对比值和可选说明。Skill 也会在聊天里主动向你索要这些内容。
+
+![雷达能力画像需要准备的数据](assets/readme/05-radar-data-needed.png)
+
+### 3. 让 Agent 开始制作
+
+网站会给出可复制的说明；安装本 Skill 后更简单，直接告诉它最终要做成什么即可。
+
+![让 Agent 开始制作雷达能力画像](assets/readme/06-radar-start-making.png)
 
 ## 安装
 
-### 方法一：让 Skill Installer 安装
+### 最简单：交给 Skill Installer
 
-在 Codex 中调用内置安装器，并把本仓库地址交给它：
+在 Codex 中发送：
 
 ```text
 请使用 $skill-installer 安装这个 Skill：
 https://github.com/maverickgao8848/mav-charts
 ```
 
-### 方法二：安装到当前项目
-
-把仓库克隆到项目的 `.agents/skills` 目录：
+### 安装到当前项目
 
 ```bash
 git clone https://github.com/maverickgao8848/mav-charts.git .agents/skills/mav-chart-maker
 ```
 
-适合把 Skill 与项目一起提交，让团队成员在这个项目中共同使用。
+这样团队在这个项目里都可以使用它。
 
-### 方法三：安装到用户目录
-
-把仓库克隆到用户级 Skill 目录后，可以在不同项目中使用：
+### 安装到自己的电脑
 
 ```bash
 git clone https://github.com/maverickgao8848/mav-charts.git ~/.agents/skills/mav-chart-maker
 ```
 
-Codex 通常会自动发现新安装的 Skill；如果没有出现，重启 Codex。
+这样可以在不同项目中使用。如果 Codex 没有马上发现新 Skill，重启一次即可。
 
-## 最省事的用法：直接调用 Skill
-
-在 Codex CLI 或 IDE 中输入 `$mav-chart-maker`，再用自然语言描述需求：
+## 直接复制这个用法
 
 ```text
 $mav-chart-maker
 
-我有按月份统计的品牌销售数据，想看增长趋势。
-请先推荐合适的 MAV 模板，再让我选择 Signal、Editorial 或 Digital，
-然后告诉我需要提供哪些字段，最后做成一页 PowerPoint。
+我想表达：[例如：两个团队在五项能力上的差异]
+我的数据：[粘贴表格，或说明稍后上传 Excel / CSV]
+使用场景：[例如：给管理层做月度汇报]
+最终想要：[例如：一页 16:9 PowerPoint]
+
+请先推荐合适的 MAV 模板，给我网站预览链接；
+然后让我选择 Signal、Editorial 或 Digital；
+再告诉我还需要补充哪些数据，最后直接帮我做出来。
 ```
 
-在支持 Skill 选择器的 ChatGPT 桌面端，也可以从 Skill 列表中选择 **MAV Chart Maker**。即使不显式点名，只要请求与“选图、数据可视化、制作图表”匹配，Codex 也可以根据描述自动调用它。
-
-### 也可以只给一句模糊需求
+没准备好数据也没关系，可以更简单：
 
 ```text
-$mav-chart-maker 帮我做一个图，想说明不同渠道的收入贡献，最后要放进汇报 PPT。
+$mav-chart-maker 我想做一张能说明各渠道收入贡献的图，最后放进 PPT，你带着我一步一步做。
 ```
 
-Skill 会主动完成下面的对话流程：
+## 更多网站入口
 
-1. 理解要表达的问题、受众和使用场景。
-2. 从内置 48 个 MAV 模板中推荐 1 个首选，必要时给出最多 2 个备选。
-3. 要求用户明确选择 `Signal`、`Editorial` 或 `Digital`，不会静默代选。
-4. 读取所选模板的真实 schema，只询问该模板缺少的数据、字段含义、单位和标题等信息。
-5. 询问最终要做成 PNG/SVG、PowerPoint、React 组件、网页看板、视频画面或其他形式。
-6. 使用真实 MAV 组件生成并验证交付物。
+- 按人群找图：[咨询](https://maverickgao8848.github.io/mav-charts/collections/consulting) · [金融](https://maverickgao8848.github.io/mav-charts/collections/finance) · [产品](https://maverickgao8848.github.io/mav-charts/collections/product) · [市场](https://maverickgao8848.github.io/mav-charts/collections/marketing) · [运营](https://maverickgao8848.github.io/mav-charts/collections/operations)
+- [完整图表库](https://maverickgao8848.github.io/mav-charts/library)
+- [使用指南](https://maverickgao8848.github.io/mav-charts/guides)
+- [关于 MAV Charts](https://maverickgao8848.github.io/mav-charts/about)
 
-## 给它什么信息，结果会更可靠
+Skill 也会在实际对话中主动给出当前最相关的入口：推荐时直达具体图表，选风格时直达三种预览，索要数据时回到图表详情说明，交付时保留最终模板链接。
 
-一开始不必把所有信息准备齐，Skill 会主动追问。若已经有这些内容，可以直接一起提供：
+## 它为什么可以搬到别的仓库使用
 
-- 想回答的业务问题，而不只是数据列名
-- 一小段脱敏后的真实数据，或 CSV / Excel / 文档附件
-- 每个字段的含义、单位和时间范围
-- 图表给谁看，会放在汇报、网页、手机页面还是视频中
-- 期望的输出格式和画面比例
-- 是否有不能修改的数据接口、页面结构或品牌要求
+这个 GitHub 仓库本身就是完整 Skill 文件夹，模板、三种风格、字体、预览、schema、验证规则和 React 组件都在 `assets/mav-charts` 里。Skill 永远从自己的 `SKILL.md` 定位这些文件，不需要宿主仓库预先安装 MAV Charts。
 
-不会把缺失值擅自当作 `0`，不会编造生产数据，也不会为了“好看”而修改真实数值。只有用户明确同意做 mockup 时，才会使用并标注占位数据。
-
-## 它会怎样帮你选图
-
-Skill 会读取内置实时目录，结合模板的适用问题、受众、场景和状态来推荐，而不是依赖一份写死在提示词里的名单。
-
-| 你想回答的问题 | 可能优先考虑的方向 |
-|---|---|
-| 哪个地区的销售额最高？ | 基础柱状图、横向排名图 |
-| 最近 12 个月增长了吗？ | 趋势折线图、趋势面积图 |
-| 各渠道贡献占比是多少？ | 饼图、环形图、百分比堆叠图 |
-| 两个指标之间有关联吗？ | 散点图、回归图 |
-| 当前完成进度是多少？ | 径向进度图、仪表盘 |
-| 资金或用户如何流转？ | 桑基图、漏斗图或层级图 |
-
-最终推荐只会来自仓库中真实存在的 MAV 模板。Skill 会优先使用稳定模板；如果建议使用原型或规划中的模板，会先说明并征得同意。
-
-## 三种风格必须由用户选择
-
-这是工作流中的固定步骤，而不是可跳过的默认设置：
-
-- `signal`：黑色舞台、强烈的编辑对比和一个明确红色信号
-- `editorial`：硬边、精确的分析呈现，使用克制的蓝色和红色强调
-- `digital`：近黑色的研究仪器感、细线和安静的对比
-
-Skill 可以结合场景推荐某一种，但仍会要求用户亲自确认。选择后，它会把精确的 `signal`、`editorial` 或 `digital` 值传给 MAV 组件。
-
-## 支持哪些交付形式
-
-- PNG 或 SVG 图片
-- 一页或多页 PowerPoint
-- React / TypeScript 图表组件或页面
-- Dashboard / Web 嵌入
-- 视频静帧或动态图表
-- 用户明确指定的其他格式
-
-制作 PowerPoint 时，默认把真实 MAV 组件渲染成 SVG 或高分辨率图片放入幻灯片，以保留模板视觉；不会悄悄换成普通 PowerPoint 图表。若用户更重视原生可编辑性，Skill 会先说明视觉一致性的取舍。
-
-## 仓库结构
-
-```text
-mav-charts/
-├── SKILL.md                     # Skill 的核心调用与执行规则
-├── agents/openai.yaml           # 显示名称、简介和默认调用提示
-├── references/                  # 数据收集、交付和仓库定位说明
-├── scripts/
-│   ├── materialize-runtime.mjs  # 将内置运行时复制到可写工作目录
-│   └── check-portability.mjs    # 检查模板、预览和路径完整性
-└── assets/mav-charts/           # 完整的 MAV Charts 模板运行时
-    ├── packages/charts/         # 48 个图表组件和公开类型
-    ├── packages/themes/         # Signal / Editorial / Digital
-    ├── packages/motion/         # 动效、截图模式和减少动效支持
-    ├── packages/catalog/        # 图表编号、分类和目录元数据
-    ├── packages/examples/       # 可复用、可测试的示例数据
-    └── public/catalog/          # 模板和三种风格的真实预览
-```
-
-运行时始终通过 `SKILL.md` 所在位置解析，因此整个 Skill 文件夹可以搬到另一个仓库或用户目录中继续工作。生成图表时，它会先把内置运行时复制到独立工作目录，不会把用户数据或产物写回已安装的 Skill。
-
-## 开发与验证
-
-验证 Skill 的完整性和可移植性：
+运行检查：
 
 ```bash
 node scripts/check-portability.mjs
 ```
 
-如果要单独调试内置 MAV Charts 运行时，先复制到一个空目录：
-
-```bash
-node scripts/materialize-runtime.mjs --output /absolute/path/to/empty-directory
-cd /absolute/path/to/empty-directory
-npm ci
-npm run check
-```
-
-完整检查会构建所有包、执行 TypeScript 类型检查和单元测试，并构建预览网站。
-
-## 为什么可以放心用于真实项目
-
-- 内置 48 个固定编号、带 TypeScript 类型的真实 MAV 模板
-- 每个模板都提供 schema、验证规则、示例数据和源组件
-- 支持宽屏、标准、卡片、移动端和缩略图尺寸
-- 支持键盘操作、屏幕阅读器数据表和减少动效偏好
-- 覆盖缺失值、负数、极端值、长标签和无效数据等常见情况
-- 模板、三种风格预览、字体和运行依赖都随 Skill 一起携带
-- 不依赖宿主仓库，也不使用通用、旧版或临时仿制的图表模板
-
-工作流细节见 [`SKILL.md`](SKILL.md)，数据收集和交付规则见 [`references/intake-and-delivery.md`](references/intake-and-delivery.md)。
-
-## License
-
-MAV Charts 使用 [MIT License](LICENSE)。
+工作流细节见 [`SKILL.md`](SKILL.md)。MAV Charts 使用 [MIT License](LICENSE)。
