@@ -10,7 +10,7 @@ MAV Charts 是一个基于 React、Recharts 和 TypeScript 的开源图表库，
 
 网站和图表目录都提供中文说明。第一次使用时，可以先打开在线图表库，按自己要解决的问题筛选，不需要先记住每种图表的英文名称。
 
-![MAV Charts 中文首页](docs/previews/mav-charts-home-zh.png)
+![MAV Charts 中文首页](docs/previews/mav-charts-home-zh.png?v=bab19af)
 
 ## 这个项目适合谁
 
@@ -123,7 +123,7 @@ https://github.com/maverickgao8848/mav-charts
 | 两个指标之间有关联吗？ | 散点图、回归图 |
 | 当前完成进度是多少？ | 径向进度图、仪表盘 |
 
-![MAV Charts 中文图表资料库](docs/previews/mav-charts-library-zh.png)
+![MAV Charts 中文图表资料库](docs/previews/mav-charts-library-zh.png?v=bab19af)
 
 ### 第二步：选择视觉风格
 
