@@ -202,8 +202,6 @@ npm run dev
 
 终端显示本地地址后，在浏览器中打开它即可。项目的中文使用手册也整理了选图、数据真实性、无障碍和动效方面的基本原则。
 
-![MAV Charts 中文使用手册](docs/previews/mav-charts-guides-zh.png)
-
 提交修改前，建议运行：
 
 ```bash
