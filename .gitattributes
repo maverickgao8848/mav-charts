@@ -1,2 +1,2 @@
-tests/visual/**/*.png filter=lfs diff=lfs merge=lfs -text
-public/catalog/*.png filter=lfs diff=lfs merge=lfs -text
+assets/mav-charts/tests/visual/**/*.png filter=lfs diff=lfs merge=lfs -text
+assets/mav-charts/public/catalog/*.png filter=lfs diff=lfs merge=lfs -text

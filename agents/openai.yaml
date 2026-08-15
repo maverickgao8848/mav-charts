@@ -1,0 +1,4 @@
+interface:
+  display_name: "MAV Chart Maker"
+  short_description: "Build charts from the bundled portable MAV template runtime"
+  default_prompt: "Use $mav-chart-maker to choose a bundled MAV template, collect my data, let me select Signal, Editorial, or Digital, and create the requested deliverable."
