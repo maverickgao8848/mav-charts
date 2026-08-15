@@ -13,8 +13,8 @@ test("Library implements the catalog-driven site architecture", async ({ page },
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/", { waitUntil: "networkidle" });
   await page.evaluate(() => document.fonts.ready);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Find the chart");
-  await expect(page.getByRole("link", { name: "EXPLORE THE LIBRARY" })).toHaveAttribute("href", "/library");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("说真话的图表");
+  await expect(page.getByRole("link", { name: "浏览图表库" })).toHaveAttribute("href", "/library");
   await expect(page.locator(".system-tile")).toHaveCount(3);
   await expect(page.locator(".featured-grid .library-card")).toHaveCount(6);
   await expect(page).toHaveScreenshot("library-home-wide.png", { animations: "disabled", caret: "hide" });
@@ -24,11 +24,11 @@ test("Library implements the catalog-driven site architecture", async ({ page },
   await page.evaluate(() => document.fonts.ready);
   expect(await page.locator(".library-card").count()).toBeGreaterThan(0);
   await expect(page.locator(".library-card").first().locator(".library-card-taxonomy span")).toHaveCount(3);
-  await expect(page.locator(".library-card").first().getByRole("link", { name: "VIEW CHART", exact: true })).toBeVisible();
-  await expect(page.locator(".library-card").first().getByRole("link", { name: "GITHUB SOURCE" })).toBeVisible();
+  await expect(page.locator(".library-card").first().getByRole("link", { name: "查看图表", exact: true })).toBeVisible();
+  await expect(page.locator(".library-card").first().getByRole("link", { name: "GitHub 源码" })).toBeVisible();
   await expect(page.locator(".library-card").first().locator("img")).toHaveAttribute("src", /-editorial\.png$/);
   await expect(page).toHaveURL(/\/library\?question=compare&system=editorial/);
-  const search = page.getByPlaceholder("ID, name, business question…");
+  const search = page.getByPlaceholder("图表编号、名称或业务问题…");
   await search.fill("profit bridge");
   await expect(page.locator(".library-card")).toHaveCount(1);
   await expect(page).toHaveURL(/q=profit\+bridge/);
@@ -55,7 +55,7 @@ test("Library implements the catalog-driven site architecture", async ({ page },
     await page.goto(route, { waitUntil: "networkidle" });
     await expect(page.locator("main.library-shell")).toBeVisible();
   }
-  await expect(page.locator(".about-grid")).toContainText("MIT licensed");
+  await expect(page.locator(".about-grid")).toContainText("MIT 许可证");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/library", { waitUntil: "networkidle" });

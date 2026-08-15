@@ -17,6 +17,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:visual": "playwright test",
+    "catalog:thumbnails": "node scripts/generate-catalog-thumbnails.mjs",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "npm run build:packages && changeset publish",
