@@ -32,7 +32,7 @@ import {
 export type ColumnTargetChartProps = {
   data?: readonly ColumnTargetDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   actualName?: string;
@@ -481,7 +481,7 @@ export function ColumnTargetGeometry({
   );
 }
 
-export function ColumnTargetChart({
+export function ColumnTargetChart({ durationMs, progress,
   data = columnTargetExample,
   visualSystem = "signal",
   animate,
@@ -490,13 +490,13 @@ export function ColumnTargetChart({
   actualName = "Actual",
   targetName = "Target",
   unit = "K",
-}: ColumnTargetChartProps) {
+}: ColumnTargetChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateColumnTargetData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="B02"
       title={title}
       subtitle={subtitle}

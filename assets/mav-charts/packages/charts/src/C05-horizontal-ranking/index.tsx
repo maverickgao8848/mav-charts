@@ -11,7 +11,7 @@ import { buildHorizontalRankingGeometry, getHorizontalRankingDomain, validateHor
 export type HorizontalRankingChartProps = {
   data?: readonly HorizontalRankingDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -103,14 +103,14 @@ export function HorizontalRankingGeometry({ data, theme, animate = true, seriesN
   </div>;
 }
 
-export function HorizontalRankingChart({ data = horizontalRankingExample, visualSystem = "signal", animate, title = "Enterprise holds a clear lead", subtitle = "RANKED DESCENDING · CURRENT SCORE", seriesName = "Value", unit = "" }: HorizontalRankingChartProps) {
+export function HorizontalRankingChart({ durationMs, progress,  data = horizontalRankingExample, visualSystem = "signal", animate, title = "Enterprise holds a clear lead", subtitle = "RANKED DESCENDING · CURRENT SCORE", seriesName = "Value", unit = "" }: HorizontalRankingChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveHorizontalRankingAnimation(animate, reducedMotion);
   const validation = validateHorizontalRankingData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   const safeData = validation.valid ? data : [];
-  return <ChartShell code="C05" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · HORIZONTAL RANKING`} theme={theme} state={state} description="Finite values sorted descending with stable ties, explicit ranks, signed zero baseline and unranked missing rows."><HorizontalRankingGeometry data={safeData} theme={theme} animate={shouldAnimate} seriesName={seriesName} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C05" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · HORIZONTAL RANKING`} theme={theme} state={state} description="Finite values sorted descending with stable ties, explicit ranks, signed zero baseline and unranked missing rows."><HorizontalRankingGeometry data={safeData} theme={theme} animate={shouldAnimate} seriesName={seriesName} unit={unit} /></ChartShell>;
 }
 
 export { buildHorizontalRankingGeometry, getHorizontalRankingDomain, getHorizontalRankingLength, mapHorizontalRankingX, validateHorizontalRankingData } from "./schema";

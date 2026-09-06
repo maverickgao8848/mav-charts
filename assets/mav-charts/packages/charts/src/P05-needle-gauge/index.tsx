@@ -8,7 +8,7 @@ import { needleGaugeExample } from "./example-data";
 import { getNeedleGaugeMotion } from "./motion";
 import { buildNeedleGaugeGeometry, validateNeedleGaugeData, type GaugeBandGeometry, type NeedleGaugeDatum } from "./schema";
 
-export type NeedleGaugeChartProps = { data?: NeedleGaugeDatum | null; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string; unit?: string };
+export type NeedleGaugeChartProps = { data?: NeedleGaugeDatum | null; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string; unit?: string };
 export const resolveNeedleGaugeAnimation = (animate: boolean | undefined, reduced: boolean) => animate ?? !reduced;
 export const formatNeedleGaugeLabel = (label: string, maximum = 25) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatNeedleGaugeValue = (value: number) => { const absolute = Math.abs(value); if (absolute >= 1e9) return `${Number((value / 1e9).toFixed(1))}B`; if (absolute >= 1e6) return `${Number((value / 1e6).toFixed(1))}M`; if (absolute >= 1e3) return `${Number((value / 1e3).toFixed(1))}K`; return Number(value.toFixed(4)).toString(); };
@@ -53,9 +53,9 @@ export function NeedleGaugeGeometry({ data, theme, animate = true, unit = "" }: 
   </div>;
 }
 
-export function NeedleGaugeChart({ data = needleGaugeExample, visualSystem = "signal", animate, title = "Capacity is near the top of its balanced range", subtitle = "DECLARED RANGE · LINEAR NEEDLE POSITION", unit = "%" }: NeedleGaugeChartProps) {
+export function NeedleGaugeChart({ durationMs, progress,  data = needleGaugeExample, visualSystem = "signal", animate, title = "Capacity is near the top of its balanced range", subtitle = "DECLARED RANGE · LINEAR NEEDLE POSITION", unit = "%" }: NeedleGaugeChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem), validation = data === null ? null : validateNeedleGaugeData(data), state = data === null ? "empty" : validation?.valid ? "ready" : "invalid";
-  return <ChartShell code="P05" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · NEEDLE GAUGE`} theme={theme} state={state} description="One finite value mapped linearly across an explicit range with ordered contextual bands.">{data !== null && validation?.valid ? <NeedleGaugeGeometry data={data} theme={theme} animate={resolveNeedleGaugeAnimation(animate, usePrefersReducedMotion())} unit={unit} /> : null}</ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="P05" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · NEEDLE GAUGE`} theme={theme} state={state} description="One finite value mapped linearly across an explicit range with ordered contextual bands.">{data !== null && validation?.valid ? <NeedleGaugeGeometry data={data} theme={theme} animate={resolveNeedleGaugeAnimation(animate, usePrefersReducedMotion())} unit={unit} /> : null}</ChartShell>;
 }
 
 export { buildNeedleGaugeGeometry, mapGaugeAngle, mapNeedleRotation, validateNeedleGaugeData } from "./schema";

@@ -7,7 +7,7 @@ import { boxPlotExample } from "./example-data";
 import { getBoxPlotMotion } from "./motion";
 import { buildBoxPlotGeometry, getBoxPlotDomain, getBoxPlotWidth, getBoxPlotX, mapBoxPlotY, validateBoxPlotData, type BoxPlotDatum, type BoxPlotGeometryDatum } from "./schema";
 
-export type BoxPlotChartProps = { data?: readonly BoxPlotDatum[]; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string; unit?: string };
+export type BoxPlotChartProps = { data?: readonly BoxPlotDatum[]; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string; unit?: string };
 export const resolveBoxPlotAnimation = (animate: boolean | undefined, reduced: boolean) => animate ?? !reduced;
 export const formatBoxPlotLabel = (label: string, maximum = 13) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatBoxPlotValue = (value: number) => { const absolute = Math.abs(value); if (absolute >= 1e9) return `${Number((value / 1e9).toFixed(1))}B`; if (absolute >= 1e6) return `${Number((value / 1e6).toFixed(1))}M`; if (absolute >= 1e3) return `${Number((value / 1e3).toFixed(1))}K`; return Number(value.toFixed(4)).toString(); };
@@ -62,9 +62,9 @@ export function BoxPlotGeometry({ data, theme, animate = true, unit = "" }: { da
   </div>;
 }
 
-export function BoxPlotChart({ data = boxPlotExample, visualSystem = "signal", animate, title = "Core has the widest operating spread", subtitle = "PRECOMPUTED FIVE-NUMBER SUMMARY · OUTLIERS OUTSIDE WHISKERS", unit = "" }: BoxPlotChartProps) {
+export function BoxPlotChart({ durationMs, progress,  data = boxPlotExample, visualSystem = "signal", animate, title = "Core has the widest operating spread", subtitle = "PRECOMPUTED FIVE-NUMBER SUMMARY · OUTLIERS OUTSIDE WHISKERS", unit = "" }: BoxPlotChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem), validation = validateBoxPlotData(data), state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="D04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · BOX PLOT`} theme={theme} state={state} description="Precomputed five-number summaries with honest whiskers, quartile boxes, medians and outliers."><BoxPlotGeometry data={validation.valid ? data : []} theme={theme} animate={resolveBoxPlotAnimation(animate, usePrefersReducedMotion())} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="D04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · BOX PLOT`} theme={theme} state={state} description="Precomputed five-number summaries with honest whiskers, quartile boxes, medians and outliers."><BoxPlotGeometry data={validation.valid ? data : []} theme={theme} animate={resolveBoxPlotAnimation(animate, usePrefersReducedMotion())} unit={unit} /></ChartShell>;
 }
 export { buildBoxPlotGeometry, getBoxPlotDomain, getBoxPlotWidth, getBoxPlotX, mapBoxPlotY, validateBoxPlotData } from "./schema";
 export type { BoxPlotDatum, BoxPlotGeometryDatum } from "./schema";

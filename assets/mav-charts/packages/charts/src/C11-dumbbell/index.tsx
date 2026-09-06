@@ -10,7 +10,7 @@ import { buildDumbbellGeometry, getDumbbellDomain, validateDumbbellData, type Du
 export type DumbbellChartProps = {
   data?: readonly DumbbellDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -79,13 +79,13 @@ export function DumbbellGeometry({ data, theme, animate = true }: { data: readon
   );
 }
 
-export function DumbbellChart({ data = dumbbellExample, visualSystem = "editorial", animate, title = "Regions moved—just not together", subtitle = "2024 → 2026 · INDEXED PERFORMANCE" }: DumbbellChartProps) {
+export function DumbbellChart({ durationMs, progress,  data = dumbbellExample, visualSystem = "editorial", animate, title = "Regions moved—just not together", subtitle = "2024 → 2026 · INDEXED PERFORMANCE" }: DumbbellChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveDumbbellAnimation(animate, reducedMotion);
   const validation = validateDumbbellData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="C11" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · DUMBBELL`} theme={theme} state={state} description="Paired values connected by category."><DumbbellGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C11" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · DUMBBELL`} theme={theme} state={state} description="Paired values connected by category."><DumbbellGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildDumbbellGeometry, getDumbbellDomain, validateDumbbellData } from "./schema";

@@ -10,7 +10,7 @@ import { buildHeatmapGeometry, getHeatmapDomain, normalizeHeatmapValue, validate
 export type HeatmapChartProps = {
   data?: readonly HeatmapDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -102,13 +102,13 @@ export function HeatmapGeometry({ data, theme, animate = true }: { data: readonl
   </div>;
 }
 
-export function HeatmapChart({ data = heatmapExample, visualSystem = "digital", animate, title = "Wednesday noon is the pressure point", subtitle = "ACTIVITY DENSITY · DAY × HOUR" }: HeatmapChartProps) {
+export function HeatmapChart({ durationMs, progress,  data = heatmapExample, visualSystem = "digital", animate, title = "Wednesday noon is the pressure point", subtitle = "ACTIVITY DENSITY · DAY × HOUR" }: HeatmapChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveHeatmapAnimation(animate, reducedMotion);
   const validation = validateHeatmapData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="D08" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · HEATMAP`} theme={theme} state={state} description="A complete categorical grid with one honest continuous color domain and explicit missing cells."><HeatmapGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="D08" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · HEATMAP`} theme={theme} state={state} description="A complete categorical grid with one honest continuous color domain and explicit missing cells."><HeatmapGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildHeatmapGeometry, getHeatmapDomain, normalizeHeatmapValue, validateHeatmapData } from "./schema";

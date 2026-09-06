@@ -121,6 +121,11 @@ main {
   min-height: 420px;
 }
 
+html[data-preview-progress] .template-preview > .chart-card {
+  clip-path: inset(0 calc((1 - var(--mav-preview-progress)) * 100%) 0 0);
+  opacity: max(.08, var(--mav-preview-progress));
+}
+
 .visual-board {
   position: relative;
   isolation: isolate;

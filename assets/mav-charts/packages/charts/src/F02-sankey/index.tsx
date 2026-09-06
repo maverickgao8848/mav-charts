@@ -28,7 +28,7 @@ import {
 export type SankeyChartProps = {
   data?: readonly SankeyDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -415,20 +415,20 @@ export function SankeyGeometry({
   );
 }
 
-export function SankeyChart({
+export function SankeyChart({ durationMs, progress,
   data = sankeyExample,
   visualSystem = "signal",
   animate,
   title = "Production feeds two routes to customers",
   subtitle = "VALUE CHAIN · RIBBON WIDTH = FLOW",
   unit = "",
-}: SankeyChartProps) {
+}: SankeyChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validateSankeyData(data);
   const state =
     data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="F02"
       title={title}
       subtitle={subtitle}

@@ -31,6 +31,18 @@ describe("ChartShell", () => {
     expect(screen.queryByText("hidden")).not.toBeInTheDocument();
   });
 
+  it("exposes a deterministic motion frame", () => {
+    render(
+      <ChartShell code="C01" title="Frame" subtitle="42 percent" source="MAV" theme={visualSystems.signal} durationMs={3000} progress={0.42}>
+        <svg role="img" aria-label="Frame geometry" />
+      </ChartShell>,
+    );
+    const article = screen.getByRole("article", { name: "Frame" });
+    expect(article).toHaveAttribute("data-motion-progress", "0.42");
+    expect(article).toHaveAttribute("data-motion-duration-ms", "3000");
+    expect(article).toHaveStyle({ clipPath: "inset(0 58.00000000000001% 0 0)" });
+  });
+
   it("localizes the embedded Chinese preview without changing the default component API", async () => {
     window.history.replaceState({}, "", "/?lang=zh&chartTitle=%E5%88%86%E7%B1%BB%E5%AF%B9%E6%AF%94&chartSubtitle=%E5%9F%BA%E7%A1%80%E6%9F%B1%E7%8A%B6%E5%9B%BE&chartSource=%E4%BF%A1%E5%8F%B7");
     render(

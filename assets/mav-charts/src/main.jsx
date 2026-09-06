@@ -233,13 +233,24 @@ import { resolveMotionPreferences } from "../packages/motion/src";
 import { visualSystemIds, visualSystems } from "../packages/themes/src";
 import { prototypeCatalog } from "../packages/catalog/src";
 import { LibraryApp as MavLibraryApp } from "./library/LibraryApp";
+import { initPreviewBridge, parsePreviewOptions } from "./preview/previewBridge";
+import { AnimationControllerProvider } from "recharts";
+import { createChartPlayback } from "./preview/chartPlayback";
 import "./styles.css";
 
+const previewOptions = parsePreviewOptions();
+if (previewOptions.progress !== null) {
+  document.documentElement.dataset.previewProgress = String(previewOptions.progress);
+  document.documentElement.style.setProperty("--mav-preview-progress", String(previewOptions.progress));
+}
+document.documentElement.dataset.previewDurationMs = String(previewOptions.durationMs);
 const motionPreferences = resolveMotionPreferences(
   window.location.search,
   window.matchMedia("(prefers-reduced-motion: reduce)").matches,
 );
-const captureMode = !motionPreferences.animate;
+const captureMode = previewOptions.progress !== null
+  ? true
+  : !motionPreferences.animate;
 document.documentElement.dataset.capture = captureMode ? "true" : "false";
 
 const themes = visualSystems;
@@ -282,7 +293,7 @@ function WaterfallChart({ theme }) {
     <ProfitBridgeGeometry
       data={profitBridgeExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -292,7 +303,7 @@ function BubbleChart({ theme }) {
     <BubbleQuadrantGeometry
       data={bubbleQuadrantExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -302,7 +313,7 @@ function DualAxisChart({ theme }) {
     <DualAxisGeometry
       data={dualAxisExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -312,7 +323,7 @@ function DumbbellChart({ theme }) {
     <DumbbellGeometry
       data={dumbbellExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -322,7 +333,7 @@ function RangeAreaChart({ theme }) {
     <RangeAreaGeometry
       data={rangeAreaExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -332,7 +343,7 @@ function TimelineChart({ theme }) {
     <TimelineGeometry
       data={timelineExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -342,7 +353,7 @@ function BrushTimeSeries({ theme }) {
     <BrushTimeSeriesGeometry
       data={brushTimeSeriesExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -352,7 +363,7 @@ function HeatmapChart({ theme }) {
     <HeatmapGeometry
       data={heatmapExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -362,7 +373,7 @@ function RadialProgressChart({ theme }) {
     <RadialProgressGeometry
       data={radialProgressExample}
       theme={theme}
-      animate={!captureMode}
+      animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
     />
   );
 }
@@ -664,7 +675,7 @@ function App() {
         <FormalOhlcCandlestickChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -697,7 +708,7 @@ function App() {
         <FormalRadarProfileChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -732,7 +743,7 @@ function App() {
         <FormalColumnTargetChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -765,7 +776,7 @@ function App() {
         <FormalSunburstChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -800,7 +811,7 @@ function App() {
         <FormalColumnLineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -833,7 +844,7 @@ function App() {
         <FormalNestedTreemapChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -864,7 +875,7 @@ function App() {
         <FormalFunnelStageChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -896,7 +907,7 @@ function App() {
         <FormalTreemapChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -928,7 +939,7 @@ function App() {
         <FormalRegressionChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -962,7 +973,7 @@ function App() {
         <FormalHistogramChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -994,7 +1005,7 @@ function App() {
         <FormalErrorBarChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1025,7 +1036,7 @@ function App() {
         <FormalBoxPlotChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1065,7 +1076,7 @@ function App() {
           thresholdX={thresholdX}
           thresholdY={thresholdY}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1094,7 +1105,7 @@ function App() {
         <FormalScatterChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1139,7 +1150,7 @@ function App() {
         <FormalSynchronizedSmallMultiplesChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1172,7 +1183,7 @@ function App() {
         <FormalPercentAreaChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1206,7 +1217,7 @@ function App() {
         <FormalIndexedEventTrendChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1236,7 +1247,7 @@ function App() {
         <FormalStackedAreaChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1268,7 +1279,7 @@ function App() {
         <FormalMultiSeriesAreaChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1300,7 +1311,7 @@ function App() {
         <FormalTrendAreaChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1334,7 +1345,7 @@ function App() {
         <FormalTargetLineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1365,7 +1376,7 @@ function App() {
         <FormalValueDotLineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1406,7 +1417,7 @@ function App() {
         <FormalStepLineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1449,7 +1460,7 @@ function App() {
         <FormalMultiSeriesLineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1488,7 +1499,7 @@ function App() {
         <FormalTrendLineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1527,7 +1538,7 @@ function App() {
         <FormalPercentStackedChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1568,7 +1579,7 @@ function App() {
         <FormalDivergingBarChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1605,7 +1616,7 @@ function App() {
         <FormalStackedBarChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1640,7 +1651,7 @@ function App() {
         <FormalGroupedBarChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1673,7 +1684,7 @@ function App() {
         <FormalHorizontalRankingChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1708,7 +1719,7 @@ function App() {
         <FormalStackedColumnChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1743,7 +1754,7 @@ function App() {
         <FormalGroupedColumnChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1776,7 +1787,7 @@ function App() {
         <FormalRoundedColumnChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1803,7 +1814,7 @@ function App() {
         <FormalSimpleColumnChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1824,7 +1835,7 @@ function App() {
         <ProfitBridgeChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1845,7 +1856,7 @@ function App() {
         <FormalDumbbellChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1870,7 +1881,7 @@ function App() {
         <FormalRangeAreaChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1897,7 +1908,7 @@ function App() {
         <FormalBrushTimeSeriesChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1922,7 +1933,7 @@ function App() {
       "long-label": needleGaugeEdgeCases.longLabel,
     };
     const data = previewCase === "empty" ? null : caseMap[previewCase] ?? needleGaugeExample;
-    return <main className="template-preview" data-template-preview="P05"><FormalNeedleGaugeChart data={data} visualSystem={visualSystem} animate={!captureMode} unit={previewCase === "negative-range" ? "°" : "%"} /></main>;
+    return <main className="template-preview" data-template-preview="P05"><FormalNeedleGaugeChart data={data} visualSystem={visualSystem} animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined} unit={previewCase === "negative-range" ? "°" : "%"} /></main>;
   }
   if (params.get("template") === "P01") {
     const visualSystem = visualSystemIds.includes(previewTheme)
@@ -1949,7 +1960,7 @@ function App() {
         <FormalPieCompositionChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -1980,7 +1991,7 @@ function App() {
         <FormalDonutChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2011,7 +2022,7 @@ function App() {
         <FormalLabelledDonutChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2040,7 +2051,7 @@ function App() {
         <FormalRadialProgressChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2071,7 +2082,7 @@ function App() {
         <FormalBubbleQuadrantChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2102,7 +2113,7 @@ function App() {
         <FormalHeatmapChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2122,7 +2133,7 @@ function App() {
         <FormalSankeyChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2153,7 +2164,7 @@ function App() {
         <FormalTimelineChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2186,7 +2197,7 @@ function App() {
         <FormalDualAxisChart
           data={data}
           visualSystem={visualSystem}
-          animate={!captureMode}
+          animate={!captureMode} durationMs={previewOptions.durationMs} progress={previewOptions.progress ?? undefined}
         />
       </main>
     );
@@ -2199,9 +2210,15 @@ const rootElement = document.getElementById("root");
 const appRoot = window.__MAV_CHARTS_ROOT__ ?? createRoot(rootElement);
 window.__MAV_CHARTS_ROOT__ = appRoot;
 const detailParams = new URLSearchParams(window.location.search);
-appRoot.render(
+const controlledPreview = detailParams.has("template") && window.parent !== window && !previewOptions.capture && previewOptions.progress === null;
+const chartPlayback = controlledPreview ? createChartPlayback() : undefined;
+let previewRevision = 0;
+const renderApp = () => appRoot.render(
   <>
-    <App />
+    {controlledPreview ? <AnimationControllerProvider key={previewRevision} value={chartPlayback.controller}><App /></AnimationControllerProvider> : <App />}
     {detailParams.has("library") && detailParams.has("template") ? <a className="library-back" href={import.meta.env.BASE_URL}>← BACK TO LIBRARY</a> : null}
   </>,
 );
+renderApp();
+const disposePreview = initPreviewBridge(previewOptions, chartPlayback, () => { previewRevision += 1; renderApp(); });
+if (import.meta.hot) import.meta.hot.dispose(disposePreview);

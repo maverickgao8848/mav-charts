@@ -72,6 +72,8 @@ export function ChartShell({
   children,
   description,
   state = "ready",
+  durationMs,
+  progress,
 }: ChartShellProps) {
   const titleId = `chart-${code.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-title`;
   const shellRef = useRef<HTMLElement>(null);
@@ -82,6 +84,14 @@ export function ChartShell({
   const displayDescription = isChinesePreview ? params?.get("chartDescription") || description : description;
   const displaySource = isChinesePreview ? params?.get("chartSource") || source : source;
   const displayChildren = isChinesePreview ? localizePreviewChildren(children) : children;
+  const deterministicProgress = Number.isFinite(progress) ? Math.min(1, Math.max(0, progress as number)) : undefined;
+  const shellStyle = {
+    ...toCssVariables(theme),
+    ...(deterministicProgress === undefined ? {} : {
+      clipPath: `inset(0 ${(1 - deterministicProgress) * 100}% 0 0)`,
+      opacity: Math.max(0.08, deterministicProgress),
+    }),
+  } as CSSProperties;
 
   useEffect(() => {
     if (!isChinesePreview || !shellRef.current) return;
@@ -99,8 +109,10 @@ export function ChartShell({
       data-chart-id={code}
       data-state={state}
       data-visual-system={theme.key}
+      data-motion-progress={deterministicProgress}
+      data-motion-duration-ms={durationMs}
       aria-labelledby={titleId}
-      style={toCssVariables(theme) as CSSProperties}
+      style={shellStyle}
     >
       <header className="chart-header">
         <div className="chart-code" aria-hidden="true">{code}</div>

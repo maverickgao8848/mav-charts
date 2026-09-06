@@ -11,7 +11,7 @@ test("all 48 catalog records resolve to one live detail route and source", async
     const detail = page.locator(`[data-library-detail="${item.id}"]`);
     await expect(detail).toBeVisible();
     await expect(detail.locator(".detail-stage iframe")).toHaveAttribute("src", new RegExp(`template=${item.id}.*theme=digital`));
-    await expect(detail.locator(".detail-documentation article").first().locator("code")).not.toBeEmpty();
-    await expect(detail.getByRole("link", { name: "OPEN GITHUB SOURCE" })).toHaveAttribute("href", new RegExp(item.githubPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
+    await expect(detail.locator(".technical-details")).toContainText("数据结构");
+    await expect(detail.getByRole("link", { name: "查看源代码 ↗" })).toHaveAttribute("href", new RegExp(item.githubPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"));
   }
 });

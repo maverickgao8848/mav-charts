@@ -11,7 +11,7 @@ import { buildDualAxisGeometry, getDualAxisDomains, validateDualAxisData, type D
 export type DualAxisChartProps = {
   data?: readonly DualAxisDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   barName?: string;
@@ -88,13 +88,13 @@ export function DualAxisGeometry({ data, theme, animate = true, barName = "Reven
   </div>;
 }
 
-export function DualAxisChart({ data = dualAxisExample, visualSystem = "signal", animate, title = "Growth held while margin reset", subtitle = "REVENUE $M · MARGIN % · H1", barName = "Revenue", barUnit = "$M", lineName = "Margin", lineUnit = "%" }: DualAxisChartProps) {
+export function DualAxisChart({ durationMs, progress,  data = dualAxisExample, visualSystem = "signal", animate, title = "Growth held while margin reset", subtitle = "REVENUE $M · MARGIN % · H1", barName = "Revenue", barUnit = "$M", lineName = "Margin", lineUnit = "%" }: DualAxisChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveDualAxisAnimation(animate, reducedMotion);
   const validation = validateDualAxisData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="B03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · DUAL AXIS`} theme={theme} state={state} description="Bar and line series on explicitly independent left and right scales."><DualAxisGeometry data={data} theme={theme} animate={shouldAnimate} barName={barName} barUnit={barUnit} lineName={lineName} lineUnit={lineUnit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="B03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · DUAL AXIS`} theme={theme} state={state} description="Bar and line series on explicitly independent left and right scales."><DualAxisGeometry data={data} theme={theme} animate={shouldAnimate} barName={barName} barUnit={barUnit} lineName={lineName} lineUnit={lineUnit} /></ChartShell>;
 }
 
 export { buildDualAxisGeometry, getDualAxisDomains, validateDualAxisData } from "./schema";

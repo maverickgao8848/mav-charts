@@ -31,7 +31,7 @@ import {
 export type ErrorBarChartProps = {
   data?: readonly ErrorBarDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -378,7 +378,7 @@ export function ErrorBarGeometry({
   );
 }
 
-export function ErrorBarChart({
+export function ErrorBarChart({ durationMs, progress,
   data = errorBarExample,
   visualSystem = "signal",
   animate,
@@ -386,13 +386,13 @@ export function ErrorBarChart({
   subtitle = "ESTIMATE · ABSOLUTE LOWER / UPPER",
   seriesName = "Estimate",
   unit = "",
-}: ErrorBarChartProps) {
+}: ErrorBarChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateErrorBarData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="D06"
       title={title}
       subtitle={subtitle}

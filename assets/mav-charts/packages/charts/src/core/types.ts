@@ -1,5 +1,8 @@
 import type { ReactNode } from "react";
 import type { VisualSystemId, VisualSystemTokens } from "@mav-charts/themes";
+import type { ChartMotionProps } from "@mav-charts/motion";
+
+export type { ChartMotionProps } from "@mav-charts/motion";
 
 export type ChartViewport = "wide" | "standard" | "card" | "mobile";
 
@@ -12,7 +15,9 @@ export type ChartRenderContext = {
   animate: boolean;
 };
 
-export type ChartShellProps = {
+export type MotionEnabledChartProps = ChartMotionProps;
+
+export type ChartShellProps = ChartMotionProps & {
   code: string;
   title: string;
   subtitle: string;

@@ -11,7 +11,7 @@ import { buildProfitBridgeGeometry, validateProfitBridgeData, type ProfitBridgeD
 export type ProfitBridgeChartProps = {
   data?: readonly ProfitBridgeDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -109,7 +109,7 @@ export function ProfitBridgeGeometry({ data, theme, animate = true }: { data: re
   );
 }
 
-export function ProfitBridgeChart({ data = profitBridgeExample, visualSystem = "signal", animate, title = "Margin recovery did the heavy lifting", subtitle = "EBITDA BRIDGE · INDEXED TO 100" }: ProfitBridgeChartProps) {
+export function ProfitBridgeChart({ durationMs, progress,  data = profitBridgeExample, visualSystem = "signal", animate, title = "Margin recovery did the heavy lifting", subtitle = "EBITDA BRIDGE · INDEXED TO 100" }: ProfitBridgeChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveChartAnimation(animate, reducedMotion);
@@ -117,7 +117,7 @@ export function ProfitBridgeChart({ data = profitBridgeExample, visualSystem = "
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
 
   return (
-    <ChartShell code="C10" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · PROFIT BRIDGE`} theme={theme} state={state} description="Opening value, signed drivers and closing value.">
+    <ChartShell durationMs={durationMs} progress={progress} code="C10" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · PROFIT BRIDGE`} theme={theme} state={state} description="Opening value, signed drivers and closing value.">
       <ProfitBridgeGeometry data={data} theme={theme} animate={shouldAnimate} />
     </ChartShell>
   );

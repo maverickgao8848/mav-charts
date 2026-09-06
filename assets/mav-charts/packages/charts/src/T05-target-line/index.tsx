@@ -8,7 +8,7 @@ import { targetLineExample } from "./example-data";
 import { getTargetLineMotion } from "./motion";
 import { buildTargetLineGeometry, buildTargetLineSegments, getTargetLineDomain, validateTargetLineData, type TargetLineDatum, type TargetLineGeometryDatum } from "./schema";
 
-export type TargetLineChartProps = { data?: readonly TargetLineDatum[]; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string; actualName?: string; targetName?: string; unit?: string };
+export type TargetLineChartProps = { data?: readonly TargetLineDatum[]; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string; actualName?: string; targetName?: string; unit?: string };
 export const formatTargetLineLabel = (label: string, maximum = 12) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatTargetLineValue = (value: number) => { const absolute = Math.abs(value); if (absolute >= 1e9) return `${Number((value / 1e9).toFixed(1))}B`; if (absolute >= 1e6) return `${Number((value / 1e6).toFixed(1))}M`; if (absolute >= 1e3) return `${Number((value / 1e3).toFixed(1))}K`; return Number(value.toFixed(3)).toString(); };
 export const resolveTargetLineAnimation = (animate: boolean | undefined, reduced: boolean) => animate ?? !reduced;
@@ -49,9 +49,9 @@ export function TargetLineGeometry({ data, theme, animate = true, actualName = "
   </div>;
 }
 
-export function TargetLineChart({ data = targetLineExample, visualSystem = "signal", animate, title = "Performance cleared the target in Q3", subtitle = "ACTUAL · TARGET · DELTA", actualName = "Actual", targetName = "Target", unit = "" }: TargetLineChartProps) {
+export function TargetLineChart({ durationMs, progress,  data = targetLineExample, visualSystem = "signal", animate, title = "Performance cleared the target in Q3", subtitle = "ACTUAL · TARGET · DELTA", actualName = "Actual", targetName = "Target", unit = "" }: TargetLineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem); const validation = validateTargetLineData(data); const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="T05" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · TARGET LINE`} theme={theme} state={state} description="Actual and target share one unit and one honest padded domain; missing actual observations break only the actual path."><TargetLineGeometry data={validation.valid ? data : []} theme={theme} animate={resolveTargetLineAnimation(animate, usePrefersReducedMotion())} actualName={actualName} targetName={targetName} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="T05" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · TARGET LINE`} theme={theme} state={state} description="Actual and target share one unit and one honest padded domain; missing actual observations break only the actual path."><TargetLineGeometry data={validation.valid ? data : []} theme={theme} animate={resolveTargetLineAnimation(animate, usePrefersReducedMotion())} actualName={actualName} targetName={targetName} unit={unit} /></ChartShell>;
 }
 
 export { buildTargetLineGeometry, buildTargetLineSegments, getTargetLineDomain, mapTargetLineX, mapTargetLineY, validateTargetLineData } from "./schema";

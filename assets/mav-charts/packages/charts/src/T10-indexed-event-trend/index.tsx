@@ -33,7 +33,7 @@ import {
 export type IndexedEventTrendChartProps = {
   data?: readonly IndexedEventDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   primaryName?: string;
@@ -458,7 +458,7 @@ export function IndexedEventTrendGeometry({
   );
 }
 
-export function IndexedEventTrendChart({
+export function IndexedEventTrendChart({ durationMs, progress,
   data = indexedEventExample,
   visualSystem = "signal",
   animate,
@@ -466,13 +466,13 @@ export function IndexedEventTrendChart({
   subtitle = "TWO INDEXED SERIES · BASELINE 100 · EVENT WINDOWS",
   primaryName = "Primary index",
   comparisonName = "Comparison index",
-}: IndexedEventTrendChartProps) {
+}: IndexedEventTrendChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateIndexedEventData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T10"
       title={title}
       subtitle={subtitle}

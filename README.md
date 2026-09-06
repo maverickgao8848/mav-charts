@@ -126,6 +126,22 @@ $mav-chart-maker 我想做一张能说明各渠道收入贡献的图，最后放
 
 Skill 也会在实际对话中主动给出当前最相关的入口：推荐时直达具体图表，选风格时直达三种预览，索要数据时回到图表详情说明，交付时保留最终模板链接。
 
+## 工作台与确定性预览
+
+网站首页和 `/library` 现在使用同一套单页工作台。选择、搜索、问题类型和视觉系统都写入 URL，例如：
+
+```text
+/?chart=C01&question=compare&q=收入&system=signal
+```
+
+嵌入预览可传入场景时长；截图或逐帧视频使用显式进度，旧的 `capture` 参数继续兼容：
+
+```text
+/?template=C01&theme=signal&embed=1&durationMs=3000&autoplay=1
+/?template=C01&theme=signal&embed=1&durationMs=3000&progress=0.42
+/?template=C01&theme=signal&embed=1&progress=1
+```
+
 ## 它为什么可以搬到别的仓库使用
 
 这个 GitHub 仓库本身就是完整 Skill 文件夹，模板、三种风格、字体、预览、schema、验证规则和 React 组件都在 `assets/mav-charts` 里。Skill 永远从自己的 `SKILL.md` 定位这些文件，不需要宿主仓库预先安装 MAV Charts。

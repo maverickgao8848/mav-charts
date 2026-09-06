@@ -8,7 +8,7 @@ import { funnelExample } from "./example-data";
 import { getFunnelMotion } from "./motion";
 import { buildFunnelGeometry, validateFunnelData, type FunnelDatum, type FunnelGeometryDatum } from "./schema";
 
-export type FunnelStageChartProps = { data?: readonly FunnelDatum[]; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string; unit?: string };
+export type FunnelStageChartProps = { data?: readonly FunnelDatum[]; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string; unit?: string };
 export const resolveFunnelAnimation = (animate: boolean | undefined, reduced: boolean) => animate ?? !reduced;
 export const formatFunnelLabel = (label: string, maximum = 19) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatFunnelValue = (value: number) => { const absolute = Math.abs(value); if (absolute >= 1e9) return `${Number((value / 1e9).toFixed(1))}B`; if (absolute >= 1e6) return `${Number((value / 1e6).toFixed(1))}M`; if (absolute >= 1e3) return `${Number((value / 1e3).toFixed(1))}K`; return Number(value.toFixed(4)).toString(); };
@@ -69,9 +69,9 @@ export function FunnelStageGeometry({ data, theme, animate = true, unit = "" }: 
   </div>;
 }
 
-export function FunnelStageChart({ data = funnelExample, visualSystem = "signal", animate, title = "The largest loss happens after market leads", subtitle = "ORDERED CONVERSION STAGES · WIDTH = VALUE", unit = "" }: FunnelStageChartProps) {
+export function FunnelStageChart({ durationMs, progress,  data = funnelExample, visualSystem = "signal", animate, title = "The largest loss happens after market leads", subtitle = "ORDERED CONVERSION STAGES · WIDTH = VALUE", unit = "" }: FunnelStageChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem), validation = validateFunnelData(data), state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="F04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · FUNNEL`} theme={theme} state={state} description="An ordered subset funnel with widths proportional to stage values and explicit adjacent conversion losses."><FunnelStageGeometry data={validation.valid ? data : []} theme={theme} animate={resolveFunnelAnimation(animate, usePrefersReducedMotion())} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="F04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · FUNNEL`} theme={theme} state={state} description="An ordered subset funnel with widths proportional to stage values and explicit adjacent conversion losses."><FunnelStageGeometry data={validation.valid ? data : []} theme={theme} animate={resolveFunnelAnimation(animate, usePrefersReducedMotion())} unit={unit} /></ChartShell>;
 }
 
 export { buildFunnelGeometry, getFunnelWidthRatio, mapFunnelWidth, validateFunnelData } from "./schema";

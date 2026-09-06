@@ -27,7 +27,7 @@ import {
 export type RadarProfileChartProps = {
   data?: readonly RadarProfileDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   primaryName?: string;
@@ -411,7 +411,7 @@ export function RadarProfileGeometry({
     </div>
   );
 }
-export function RadarProfileChart({
+export function RadarProfileChart({ durationMs, progress,
   data = radarProfileExample,
   visualSystem = "signal",
   animate,
@@ -419,13 +419,13 @@ export function RadarProfileChart({
   subtitle = "NORMALIZED SCORE · FIXED 0–100 DOMAIN · SAME AXES",
   primaryName = "Current",
   comparisonName = "Reference",
-}: RadarProfileChartProps) {
+}: RadarProfileChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateRadarProfileData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="B04"
       title={title}
       subtitle={subtitle}

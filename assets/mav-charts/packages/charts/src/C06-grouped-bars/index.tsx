@@ -8,7 +8,7 @@ import { groupedBarExample } from "./example-data";
 import { getGroupedBarMotion } from "./motion";
 import { buildGroupedBarGeometry, getGroupedBarDomain, validateGroupedBarData, type GroupedBarDatum, type GroupedBarGeometryDatum } from "./schema";
 
-export type GroupedBarChartProps = { data?: readonly GroupedBarDatum[]; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string; primaryName?: string; comparisonName?: string; unit?: string };
+export type GroupedBarChartProps = { data?: readonly GroupedBarDatum[]; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string; primaryName?: string; comparisonName?: string; unit?: string };
 export const formatGroupedBarLabel = (label: string, maximum = 20) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatGroupedBarValue = (value: number) => {
   const absolute = Math.abs(value);
@@ -82,12 +82,12 @@ export function GroupedBarGeometry({ data, theme, animate = true, primaryName = 
   </div>;
 }
 
-export function GroupedBarChart({ data = groupedBarExample, visualSystem = "signal", animate, title = "The lead changes by market", subtitle = "CURRENT VS PRIOR · INPUT ORDER PRESERVED", primaryName = "Current", comparisonName = "Prior", unit = "" }: GroupedBarChartProps) {
+export function GroupedBarChart({ durationMs, progress,  data = groupedBarExample, visualSystem = "signal", animate, title = "The lead changes by market", subtitle = "CURRENT VS PRIOR · INPUT ORDER PRESERVED", primaryName = "Current", comparisonName = "Prior", unit = "" }: GroupedBarChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const shouldAnimate = resolveGroupedBarAnimation(animate, usePrefersReducedMotion());
   const validation = validateGroupedBarData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="C06" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · GROUPED BARS`} theme={theme} state={state} description="Two same-unit series compared in input order on one honest horizontal scale."><GroupedBarGeometry data={validation.valid ? data : []} theme={theme} animate={shouldAnimate} primaryName={primaryName} comparisonName={comparisonName} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C06" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · GROUPED BARS`} theme={theme} state={state} description="Two same-unit series compared in input order on one honest horizontal scale."><GroupedBarGeometry data={validation.valid ? data : []} theme={theme} animate={shouldAnimate} primaryName={primaryName} comparisonName={comparisonName} unit={unit} /></ChartShell>;
 }
 
 export { buildGroupedBarGeometry, getGroupedBarDomain, getGroupedBarLength, getGroupedBarSlots, mapGroupedBarX, validateGroupedBarData } from "./schema";

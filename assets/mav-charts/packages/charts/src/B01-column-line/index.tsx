@@ -32,7 +32,7 @@ import {
 export type ColumnLineChartProps = {
   data?: readonly ColumnLineDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   scaleName?: string;
@@ -474,7 +474,7 @@ export function ColumnLineGeometry({
   );
 }
 
-export function ColumnLineChart({
+export function ColumnLineChart({ durationMs, progress,
   data = columnLineExample,
   visualSystem = "signal",
   animate,
@@ -483,13 +483,13 @@ export function ColumnLineChart({
   scaleName = "Orders",
   scaleUnit = "K",
   rateName = "Conversion",
-}: ColumnLineChartProps) {
+}: ColumnLineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateColumnLineData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="B01"
       title={title}
       subtitle={subtitle}

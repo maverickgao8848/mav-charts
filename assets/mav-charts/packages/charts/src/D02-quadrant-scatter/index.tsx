@@ -39,7 +39,7 @@ export type QuadrantScatterChartProps = {
   thresholdX?: number;
   thresholdY?: number;
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   xName?: string;
@@ -405,7 +405,7 @@ export function QuadrantScatterGeometry({
   );
 }
 
-export function QuadrantScatterChart({
+export function QuadrantScatterChart({ durationMs, progress,
   data = quadrantScatterExample,
   thresholdX = quadrantScatterThresholds.x,
   thresholdY = quadrantScatterThresholds.y,
@@ -415,7 +415,7 @@ export function QuadrantScatterChart({
   subtitle = "TWO MEASURES · EXPLICIT THRESHOLDS",
   xName = "Reach",
   yName = "Momentum",
-}: QuadrantScatterChartProps) {
+}: QuadrantScatterChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     thresholds = { x: thresholdX, y: thresholdY },
     dataValidation = validateQuadrantScatterData(data),
@@ -426,7 +426,7 @@ export function QuadrantScatterChart({
       ? thresholds
       : quadrantScatterThresholds;
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="D02"
       title={title}
       subtitle={subtitle}

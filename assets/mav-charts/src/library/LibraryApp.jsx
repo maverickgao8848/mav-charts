@@ -1,5 +1,6 @@
 import React from "react";
 import { prototypeCatalog } from "../../packages/catalog/src";
+import { WorkbenchPage } from "./workbench/WorkbenchPage";
 import "./library.css";
 
 const VERSION = "0.1.0";
@@ -295,7 +296,7 @@ function DetailPage({ id }) {
     window.history.replaceState(null, "", `${href(`/charts/${item.id}`)}?system=${next}`);
   };
   const copy = async (kind, content) => { await navigator.clipboard.writeText(content); setCopied(kind); window.setTimeout(() => setCopied(""), 1600); };
-  const previewParams = new URLSearchParams({ template: item.id, theme: system, capture: "", embed: "1", lang: "zh", chartTitle: item.descriptionZh, chartSubtitle: item.nameZh, chartDescription: guide.fit, chartSource: `${systemLabels[system]} · ${item.nameZh}` });
+  const previewParams = new URLSearchParams({ template: item.id, theme: system, embed: "1", autoplay: "1", durationMs: "3000", lang: "zh", chartTitle: item.descriptionZh, chartSubtitle: item.nameZh, chartDescription: guide.fit, chartSource: `${systemLabels[system]} · ${item.nameZh}` });
   return (
     <main className="library-shell detail-page" data-library-detail={item.id}>
       <SiteNav compact />
@@ -368,7 +369,7 @@ function GuidesPage() {
     ["01", "从问题出发", "先判断你要表达的是对比、趋势、构成、分布、关系、流向还是进度。明确业务问题后，再选择图形。"],
     ["02", "忠实于数据", "长度、位置、面积与角度必须保持比例。缺失值仍是缺失值；负数保留真实零点；坐标轴不能隐藏柱形基线。"],
     ["03", "无障碍可用", "每个模板同时支持指针与键盘交互，并提供屏幕阅读器表格、对比度检查和清晰的减弱动效状态。"],
-    ["04", "有意义的动效", "动效只解释进入与变化，绝不改变编码值。截图模式和减弱动效偏好都会直接呈现完整首帧。"],
+    ["04", "有意义的动效", "动效只解释进入与变化，绝不改变编码值。静态捕获使用 progress=1；视频逐帧使用 0–1 的显式 progress，并可用 durationMs 定义场景时长。"],
   ];
   return <main className="library-shell guide-page"><SiteNav compact /><PageMasthead eyebrow="FIELD MANUAL / 04 PRINCIPLES" title={<>Choose well.<br />Show honestly.</>} copy="A compact operating guide for teams selecting, reviewing and shipping data graphics." /><section className="guide-grid">{guides.map(([index, title, copy]) => <article key={index}><span>{index}</span><h2>{title}</h2><p>{copy}</p>{index === "01" ? <div className="guide-links">{Object.entries(questionLabels).map(([key, value]) => <a key={key} href={href(`/library?question=${key}`)}>{value} ↗</a>)}</div> : null}</article>)}</section><SiteFooter /></main>;
 }
@@ -382,7 +383,7 @@ function GuidesPageZh() {
     ["01", "从问题出发", "先判断你要表达的是对比、趋势、构成、分布、关系、流向还是进度。明确业务问题后，再选择图形。"],
     ["02", "忠实于数据", "长度、位置、面积与角度必须保持比例。缺失值仍是缺失值；负数保留真实零点；坐标轴不能隐藏柱形基线。"],
     ["03", "无障碍可用", "每个模板同时支持指针与键盘交互，并提供屏幕阅读器表格、对比度检查和清晰的减弱动效状态。"],
-    ["04", "有意义的动效", "动效只解释进入与变化，绝不改变编码值。截图模式和减弱动效偏好都会直接呈现完整首帧。"],
+    ["04", "有意义的动效", "动效只解释进入与变化，绝不改变编码值。静态捕获使用 progress=1；视频逐帧使用 0–1 的显式 progress，并可用 durationMs 定义场景时长。"],
   ];
   return <main className="library-shell guide-page"><SiteNav compact /><PageMasthead eyebrow="使用手册 / 04 条原则" title={<>选得准确。<br />表达诚实。</>} copy="一份简明操作指南，帮助团队选择、审阅并发布数据图形。" /><section className="guide-grid">{guides.map(([index, title, copy]) => <article key={index}><span>{index}</span><h2>{title}</h2><p>{copy}</p>{index === "01" ? <div className="guide-links">{Object.entries(questionLabels).map(([key, value]) => <a key={key} href={href(`/library?question=${key}`)}>{value} →</a>)}</div> : null}</article>)}</section><SiteFooter /></main>;
 }
@@ -401,8 +402,7 @@ function NotFound() {
 
 export function LibraryApp() {
   const route = useRoute();
-  if (route === "/") return <HomePageZh />;
-  if (route === "/library") return <CatalogPage />;
+  if (route === "/" || route === "/library") return <WorkbenchPage />;
   if (route === "/guides") return <GuidesPageZh />;
   if (route === "/about") return <AboutPageZh />;
   const chartMatch = route.match(/^\/charts\/([A-Za-z]\d{2})$/);

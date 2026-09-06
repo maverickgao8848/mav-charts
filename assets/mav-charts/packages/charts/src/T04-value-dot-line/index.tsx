@@ -30,7 +30,7 @@ import {
 export type ValueDotLineChartProps = {
   data?: readonly ValueDotLineDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -288,7 +288,7 @@ export function ValueDotLineGeometry({
   );
 }
 
-export function ValueDotLineChart({
+export function ValueDotLineChart({ durationMs, progress,
   data = valueDotLineExample,
   visualSystem = "signal",
   animate,
@@ -296,12 +296,12 @@ export function ValueDotLineChart({
   subtitle = "ONE METRIC · DIRECT VALUES · EQUAL SPACING",
   seriesName = "Value",
   unit = "",
-}: ValueDotLineChartProps) {
+}: ValueDotLineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validateValueDotLineData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T04"
       title={title}
       subtitle={subtitle}

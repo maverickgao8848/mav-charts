@@ -31,7 +31,7 @@ import {
 export type MultiSeriesLineChartProps = {
   data?: readonly MultiSeriesLineDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   primaryName?: string;
@@ -423,7 +423,7 @@ export function MultiSeriesLineGeometry({
   );
 }
 
-export function MultiSeriesLineChart({
+export function MultiSeriesLineChart({ durationMs, progress,
   data = multiSeriesLineExample,
   visualSystem = "signal",
   animate,
@@ -432,13 +432,13 @@ export function MultiSeriesLineChart({
   primaryName = "Current",
   comparisonName = "Prior",
   unit = "",
-}: MultiSeriesLineChartProps) {
+}: MultiSeriesLineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validateMultiSeriesLineData(data);
   const state =
     data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T02"
       title={title}
       subtitle={subtitle}

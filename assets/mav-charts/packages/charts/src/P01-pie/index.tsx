@@ -20,7 +20,7 @@ import {
 export type PieCompositionChartProps = {
   data?: readonly PieDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -388,20 +388,20 @@ export function PieCompositionGeometry({
   );
 }
 
-export function PieCompositionChart({
+export function PieCompositionChart({ durationMs, progress,
   data = pieExample,
   visualSystem = "signal",
   animate,
   title = "Core product contributes the largest share",
   subtitle = "MIX OF KNOWN TOTAL · ANGLE = VALUE SHARE",
   unit = "",
-}: PieCompositionChartProps) {
+}: PieCompositionChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validatePieData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="P01"
       title={title}
       subtitle={subtitle}

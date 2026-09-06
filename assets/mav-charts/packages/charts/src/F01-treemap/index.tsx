@@ -11,7 +11,7 @@ import { buildTreemapGeometry, validateTreemapData, type TreemapDatum, type Tree
 export type TreemapChartProps = {
   data?: readonly TreemapDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -72,11 +72,11 @@ export function TreemapGeometry({ data, theme, animate = true, unit = "" }: { da
   </div>;
 }
 
-export function TreemapChart({ data = treemapExample, visualSystem = "signal", animate, title = "The leader controls one third of the reported market", subtitle = "MARKET MAP · AREA ENCODES REPORTED VALUE", unit = "" }: TreemapChartProps) {
+export function TreemapChart({ durationMs, progress,  data = treemapExample, visualSystem = "signal", animate, title = "The leader controls one third of the reported market", subtitle = "MARKET MAP · AREA ENCODES REPORTED VALUE", unit = "" }: TreemapChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validateTreemapData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="F01" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · TREEMAP`} theme={theme} state={state} description="One-level composition where positive area is proportional to value and missing or zero rows receive no tile."><TreemapGeometry data={validation.valid ? data : []} theme={theme} animate={resolveTreemapAnimation(animate, usePrefersReducedMotion())} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="F01" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · TREEMAP`} theme={theme} state={state} description="One-level composition where positive area is proportional to value and missing or zero rows receive no tile."><TreemapGeometry data={validation.valid ? data : []} theme={theme} animate={resolveTreemapAnimation(animate, usePrefersReducedMotion())} unit={unit} /></ChartShell>;
 }
 
 export { buildTreemapGeometry, getTreemapArea, validateTreemapData } from "./schema";

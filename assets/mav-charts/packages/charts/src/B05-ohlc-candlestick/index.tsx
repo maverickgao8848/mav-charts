@@ -30,7 +30,7 @@ import {
 export type OhlcCandlestickChartProps = {
   data?: readonly OhlcDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -440,20 +440,20 @@ export function OhlcGeometry({
     </div>
   );
 }
-export function OhlcCandlestickChart({
+export function OhlcCandlestickChart({ durationMs, progress,
   data = ohlcExample,
   visualSystem = "signal",
   animate,
   title = "Friday closed at the week’s high-water mark",
   subtitle = "OHLC · SHARED PRICE SCALE · WICK + BODY",
   unit = "",
-}: OhlcCandlestickChartProps) {
+}: OhlcCandlestickChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateOhlcData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="B05"
       title={title}
       subtitle={subtitle}

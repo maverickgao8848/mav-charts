@@ -8,7 +8,7 @@ import { histogramExample } from "./example-data";
 import { getHistogramMotion } from "./motion";
 import { buildHistogramGeometry, getHistogramYDomain, validateHistogramBins, type HistogramBin, type HistogramGeometryBin } from "./schema";
 
-export type HistogramChartProps = { data?: readonly HistogramBin[]; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string };
+export type HistogramChartProps = { data?: readonly HistogramBin[]; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string };
 export const resolveHistogramAnimation = (animate: boolean | undefined, reduced: boolean) => animate ?? !reduced;
 export const formatHistogramLabel = (label: string, maximum = 13) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatHistogramCount = (value: number) => { const absolute = Math.abs(value); if (absolute >= 1e9) return `${Number((value / 1e9).toFixed(1))}B`; if (absolute >= 1e6) return `${Number((value / 1e6).toFixed(1))}M`; if (absolute >= 1e3) return `${Number((value / 1e3).toFixed(1))}K`; return String(value); };
@@ -53,9 +53,9 @@ export function HistogramGeometry({ data, theme, animate = true }: { data: reado
   </div>;
 }
 
-export function HistogramChart({ data = histogramExample, visualSystem = "signal", animate, title = "The distribution peaks between 30 and 40", subtitle = "PRE-BINNED FREQUENCY · EQUAL-WIDTH CONTINUOUS INTERVALS" }: HistogramChartProps) {
+export function HistogramChart({ durationMs, progress,  data = histogramExample, visualSystem = "signal", animate, title = "The distribution peaks between 30 and 40", subtitle = "PRE-BINNED FREQUENCY · EQUAL-WIDTH CONTINUOUS INTERVALS" }: HistogramChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem), validation = validateHistogramBins(data), state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="D07" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · HISTOGRAM`} theme={theme} state={state} description="A pre-binned frequency distribution with continuous equal-width intervals and explicit missing gaps."><HistogramGeometry data={validation.valid ? data : []} theme={theme} animate={resolveHistogramAnimation(animate, usePrefersReducedMotion())} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="D07" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · HISTOGRAM`} theme={theme} state={state} description="A pre-binned frequency distribution with continuous equal-width intervals and explicit missing gaps."><HistogramGeometry data={validation.valid ? data : []} theme={theme} animate={resolveHistogramAnimation(animate, usePrefersReducedMotion())} /></ChartShell>;
 }
 export { buildHistogramGeometry, getHistogramBarWidth, getHistogramYDomain, mapHistogramY, validateHistogramBins, formatHistogramBoundary } from "./schema";
 export type { HistogramBin, HistogramGeometryBin } from "./schema";

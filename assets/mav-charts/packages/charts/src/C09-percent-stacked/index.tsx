@@ -28,7 +28,7 @@ import {
 export type PercentStackedChartProps = {
   data?: readonly PercentStackedDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   primaryName?: string;
@@ -381,7 +381,7 @@ export function PercentStackedGeometry({
     </div>
   );
 }
-export function PercentStackedChart({
+export function PercentStackedChart({ durationMs, progress,
   data = percentStackedExample,
   visualSystem = "signal",
   animate,
@@ -390,13 +390,13 @@ export function PercentStackedChart({
   primaryName = "Primary",
   comparisonName = "Comparison",
   unit = "",
-}: PercentStackedChartProps) {
+}: PercentStackedChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validatePercentStackedData(data);
   const state =
     data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="C09"
       title={title}
       subtitle={subtitle}

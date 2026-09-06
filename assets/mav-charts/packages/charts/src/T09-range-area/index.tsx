@@ -11,7 +11,7 @@ import { buildRangeAreaGeometry, getRangeAreaDomain, validateRangeAreaData, type
 export type RangeAreaChartProps = {
   data?: readonly RangeAreaDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -74,13 +74,13 @@ export function RangeAreaGeometry({ data, theme, animate = true }: { data: reado
   </div>;
 }
 
-export function RangeAreaChart({ data = rangeAreaExample, visualSystem = "editorial", animate, title = "The upside widened after April", subtitle = "MEDIAN + 80% CONFIDENCE RANGE" }: RangeAreaChartProps) {
+export function RangeAreaChart({ durationMs, progress,  data = rangeAreaExample, visualSystem = "editorial", animate, title = "The upside widened after April", subtitle = "MEDIAN + 80% CONFIDENCE RANGE" }: RangeAreaChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveRangeAreaAnimation(animate, reducedMotion);
   const validation = validateRangeAreaData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="T09" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · RANGE AREA`} theme={theme} state={state} description="Median line with a bounded uncertainty interval."><RangeAreaGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="T09" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · RANGE AREA`} theme={theme} state={state} description="Median line with a bounded uncertainty interval."><RangeAreaGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildRangeAreaGeometry, getRangeAreaDomain, validateRangeAreaData } from "./schema";

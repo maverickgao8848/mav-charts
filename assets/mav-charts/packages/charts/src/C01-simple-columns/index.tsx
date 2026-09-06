@@ -11,7 +11,7 @@ import { buildSimpleColumnGeometry, getSimpleColumnDomain, validateSimpleColumnD
 export type SimpleColumnChartProps = {
   data?: readonly SimpleColumnDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -105,13 +105,13 @@ export function SimpleColumnGeometry({ data, theme, animate = true, seriesName =
   </div>;
 }
 
-export function SimpleColumnChart({ data = simpleColumnExample, visualSystem = "signal", animate, title = "North remains the largest region", subtitle = "REGIONAL PERFORMANCE · CURRENT PERIOD", seriesName = "Value", unit = "" }: SimpleColumnChartProps) {
+export function SimpleColumnChart({ durationMs, progress,  data = simpleColumnExample, visualSystem = "signal", animate, title = "North remains the largest region", subtitle = "REGIONAL PERFORMANCE · CURRENT PERIOD", seriesName = "Value", unit = "" }: SimpleColumnChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveSimpleColumnAnimation(animate, reducedMotion);
   const validation = validateSimpleColumnData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="C01" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · SIMPLE COLUMNS`} theme={theme} state={state} description="Categorical values on an unbroken vertical bar scale with explicit missing gaps."><SimpleColumnGeometry data={data} theme={theme} animate={shouldAnimate} seriesName={seriesName} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C01" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · SIMPLE COLUMNS`} theme={theme} state={state} description="Categorical values on an unbroken vertical bar scale with explicit missing gaps."><SimpleColumnGeometry data={data} theme={theme} animate={shouldAnimate} seriesName={seriesName} unit={unit} /></ChartShell>;
 }
 
 export { buildSimpleColumnGeometry, getSimpleColumnDomain, validateSimpleColumnData } from "./schema";

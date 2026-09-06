@@ -11,7 +11,7 @@ import { buildRadialProgressGeometry, validateRadialProgressData, type RadialPro
 export type RadialProgressChartProps = {
   data?: readonly RadialProgressDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -65,13 +65,13 @@ export function RadialProgressGeometry({ data, theme, animate = true }: { data: 
   </div>;
 }
 
-export function RadialProgressChart({ data = radialProgressExample, visualSystem = "digital", animate, title = "Activation leads; expansion still lags", subtitle = "PRODUCT HEALTH · CURRENT COHORT" }: RadialProgressChartProps) {
+export function RadialProgressChart({ durationMs, progress,  data = radialProgressExample, visualSystem = "digital", animate, title = "Activation leads; expansion still lags", subtitle = "PRODUCT HEALTH · CURRENT COHORT" }: RadialProgressChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveRadialProgressAnimation(animate, reducedMotion);
   const validation = validateRadialProgressData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="P04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · RADIAL PROGRESS`} theme={theme} state={state} description="Concentric KPI completion rings on a fixed zero-to-one-hundred scale."><RadialProgressGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="P04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · RADIAL PROGRESS`} theme={theme} state={state} description="Concentric KPI completion rings on a fixed zero-to-one-hundred scale."><RadialProgressGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildRadialProgressGeometry, validateRadialProgressData } from "./schema";

@@ -31,7 +31,7 @@ import {
 export type StepLineChartProps = {
   data?: readonly StepLineDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -350,7 +350,7 @@ export function StepLineGeometry({
   );
 }
 
-export function StepLineChart({
+export function StepLineChart({ durationMs, progress,
   data = stepLineExample,
   visualSystem = "signal",
   animate,
@@ -358,13 +358,13 @@ export function StepLineChart({
   subtitle = "STEP AFTER · HOLD, THEN CHANGE",
   seriesName = "State",
   unit = "",
-}: StepLineChartProps) {
+}: StepLineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validateStepLineData(data);
   const state =
     data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T03"
       title={title}
       subtitle={subtitle}

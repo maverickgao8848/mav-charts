@@ -29,7 +29,7 @@ import {
 export type TrendLineChartProps = {
   data?: readonly TrendLineDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -286,7 +286,7 @@ export function TrendLineGeometry({
   );
 }
 
-export function TrendLineChart({
+export function TrendLineChart({ durationMs, progress,
   data = trendLineExample,
   visualSystem = "signal",
   animate,
@@ -294,12 +294,12 @@ export function TrendLineChart({
   subtitle = "ONE METRIC · EQUALLY SPACED OBSERVATIONS",
   seriesName = "Value",
   unit = "",
-}: TrendLineChartProps) {
+}: TrendLineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const validation = validateTrendLineData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T01"
       title={title}
       subtitle={subtitle}

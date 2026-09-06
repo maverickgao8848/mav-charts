@@ -29,7 +29,7 @@ import {
 export type StackedAreaChartProps = {
   data?: readonly StackedAreaDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   baseName?: string;
@@ -418,7 +418,7 @@ export function StackedAreaGeometry({
     </div>
   );
 }
-export function StackedAreaChart({
+export function StackedAreaChart({ durationMs, progress,
   data = stackedAreaExample,
   visualSystem = "signal",
   animate,
@@ -427,13 +427,13 @@ export function StackedAreaChart({
   baseName = "Core",
   upperName = "Expansion",
   unit = "",
-}: StackedAreaChartProps) {
+}: StackedAreaChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateStackedAreaData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T08"
       title={title}
       subtitle={subtitle}

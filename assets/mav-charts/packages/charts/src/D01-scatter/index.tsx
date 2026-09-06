@@ -28,7 +28,7 @@ import {
 export type ScatterChartProps = {
   data?: readonly ScatterDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   xName?: string;
@@ -316,7 +316,7 @@ export function ScatterGeometry({
     </div>
   );
 }
-export function ScatterChartTemplate({
+export function ScatterChartTemplate({ durationMs, progress,
   data = scatterExample,
   visualSystem = "signal",
   animate,
@@ -325,13 +325,13 @@ export function ScatterChartTemplate({
   xName = "X value",
   yName = "Y value",
   unit = "",
-}: ScatterChartProps) {
+}: ScatterChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateScatterData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="D01"
       title={title}
       subtitle={subtitle}

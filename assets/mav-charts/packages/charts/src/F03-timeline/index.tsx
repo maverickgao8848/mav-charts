@@ -10,7 +10,7 @@ import { buildTimelineGeometry, getTimelineDomain, mapTimelineX, validateTimelin
 export type TimelineChartProps = {
   data?: readonly TimelineDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -101,13 +101,13 @@ export function TimelineGeometry({ data, theme, animate = true }: { data: readon
   </div>;
 }
 
-export function TimelineChart({ data = timelineExample, visualSystem = "editorial", animate, title = "Scale arrived before the market was ready", subtitle = "POLICY · CAPACITY · EXPORT MILESTONES" }: TimelineChartProps) {
+export function TimelineChart({ durationMs, progress,  data = timelineExample, visualSystem = "editorial", animate, title = "Scale arrived before the market was ready", subtitle = "POLICY · CAPACITY · EXPORT MILESTONES" }: TimelineChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveTimelineAnimation(animate, reducedMotion);
   const validation = validateTimelineData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="F03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · TIMELINE`} theme={theme} state={state} description="Intervals and milestones on one unbroken linear time scale with overlap lanes."><TimelineGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="F03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · TIMELINE`} theme={theme} state={state} description="Intervals and milestones on one unbroken linear time scale with overlap lanes."><TimelineGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildTimelineGeometry, getTimelineDomain, mapTimelineX, validateTimelineData } from "./schema";

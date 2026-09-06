@@ -11,7 +11,7 @@ import { buildStackedColumnGeometry, getStackedColumnDomain, validateStackedColu
 export type StackedColumnChartProps = {
   data?: readonly StackedColumnDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   baseName?: string;
@@ -112,14 +112,14 @@ export function StackedColumnGeometry({ data, theme, animate = true, baseName = 
   </div>;
 }
 
-export function StackedColumnChart({ data = stackedColumnExample, visualSystem = "signal", animate, title = "Every mix reached the same total", subtitle = "CORE + EXPANSION · SHARED SCALE", baseName = "Core", upperName = "Expansion", unit = "" }: StackedColumnChartProps) {
+export function StackedColumnChart({ durationMs, progress,  data = stackedColumnExample, visualSystem = "signal", animate, title = "Every mix reached the same total", subtitle = "CORE + EXPANSION · SHARED SCALE", baseName = "Core", upperName = "Expansion", unit = "" }: StackedColumnChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveStackedColumnAnimation(animate, reducedMotion);
   const validation = validateStackedColumnData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   const safeData = validation.valid ? data : [];
-  return <ChartShell code="C04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · STACKED COLUMNS`} theme={theme} state={state} description="Two same-unit segments encode total and composition with separate positive and negative accumulation."><StackedColumnGeometry data={safeData} theme={theme} animate={shouldAnimate} baseName={baseName} upperName={upperName} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C04" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · STACKED COLUMNS`} theme={theme} state={state} description="Two same-unit segments encode total and composition with separate positive and negative accumulation."><StackedColumnGeometry data={safeData} theme={theme} animate={shouldAnimate} baseName={baseName} upperName={upperName} unit={unit} /></ChartShell>;
 }
 
 export { buildStackedColumnGeometry, getStackedColumnDomain, validateStackedColumnData } from "./schema";

@@ -11,7 +11,7 @@ import { buildGroupedColumnGeometry, getGroupedColumnDomain, getGroupedColumnSlo
 export type GroupedColumnChartProps = {
   data?: readonly GroupedColumnDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   primaryName?: string;
@@ -100,13 +100,13 @@ export function GroupedColumnGeometry({ data, theme, animate = true, primaryName
   </div>;
 }
 
-export function GroupedColumnChart({ data = groupedColumnExample, visualSystem = "signal", animate, title = "Momentum widened the lead", subtitle = "CURRENT VS PRIOR · SAME SCALE", primaryName = "Current", comparisonName = "Prior", unit = "" }: GroupedColumnChartProps) {
+export function GroupedColumnChart({ durationMs, progress,  data = groupedColumnExample, visualSystem = "signal", animate, title = "Momentum widened the lead", subtitle = "CURRENT VS PRIOR · SAME SCALE", primaryName = "Current", comparisonName = "Prior", unit = "" }: GroupedColumnChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveGroupedColumnAnimation(animate, reducedMotion);
   const validation = validateGroupedColumnData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="C03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · GROUPED COLUMNS`} theme={theme} state={state} description="Two same-unit series compared side by side on one honest vertical scale."><GroupedColumnGeometry data={data} theme={theme} animate={shouldAnimate} primaryName={primaryName} comparisonName={comparisonName} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · GROUPED COLUMNS`} theme={theme} state={state} description="Two same-unit series compared side by side on one honest vertical scale."><GroupedColumnGeometry data={data} theme={theme} animate={shouldAnimate} primaryName={primaryName} comparisonName={comparisonName} unit={unit} /></ChartShell>;
 }
 
 export { buildGroupedColumnGeometry, getGroupedColumnDomain, getGroupedColumnSlots, validateGroupedColumnData } from "./schema";

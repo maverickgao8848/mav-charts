@@ -24,7 +24,7 @@ import {
 export type SunburstHierarchyChartProps = {
   data?: readonly SunburstDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -325,20 +325,20 @@ export function SunburstGeometry({
   );
 }
 
-export function SunburstHierarchyChart({
+export function SunburstHierarchyChart({ durationMs, progress,
   data = sunburstExample,
   visualSystem = "signal",
   animate,
   title = "Hardware occupies almost half of the reported portfolio",
   subtitle = "SUNBURST · ANGLE ENCODES VALUE · RADIUS ENCODES DEPTH",
   unit = "",
-}: SunburstHierarchyChartProps) {
+}: SunburstHierarchyChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateSunburstData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="F06"
       title={title}
       subtitle={subtitle}

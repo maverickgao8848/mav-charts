@@ -11,7 +11,7 @@ import { buildLabelledDonutGeometry, layoutLabelledDonutLabels, validateLabelled
 export type LabelledDonutChartProps = {
   data?: readonly LabelledDonutDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -86,9 +86,9 @@ export function LabelledDonutGeometry({ data, theme, animate = true, unit = "" }
   </div>;
 }
 
-export function LabelledDonutChart({ data = labelledDonutExample, visualSystem = "digital", animate, title = "Direct sales account for half of reported mix", subtitle = "CHANNEL MIX · ANGLE = REPORTED SHARE", unit = "" }: LabelledDonutChartProps) {
+export function LabelledDonutChart({ durationMs, progress,  data = labelledDonutExample, visualSystem = "digital", animate, title = "Direct sales account for half of reported mix", subtitle = "CHANNEL MIX · ANGLE = REPORTED SHARE", unit = "" }: LabelledDonutChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem), reduced = usePrefersReducedMotion(), shouldAnimate = resolveLabelledDonutAnimation(animate, reduced), validation = validateLabelledDonutData(data), state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="P03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · LABELLED DONUT`} theme={theme} state={state} description="A directly labelled donut whose slice angles are proportional to the reported positive total."><LabelledDonutGeometry data={data} theme={theme} animate={shouldAnimate} unit={unit} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="P03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · LABELLED DONUT`} theme={theme} state={state} description="A directly labelled donut whose slice angles are proportional to the reported positive total."><LabelledDonutGeometry data={data} theme={theme} animate={shouldAnimate} unit={unit} /></ChartShell>;
 }
 
 export { buildLabelledDonutGeometry, getLabelledDonutAngle, layoutLabelledDonutLabels, validateLabelledDonutData } from "./schema";

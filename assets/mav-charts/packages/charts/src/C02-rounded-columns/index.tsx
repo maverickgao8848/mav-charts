@@ -11,7 +11,7 @@ import { buildRoundedColumnGeometry, getControlledColumnRadius, getRoundedColumn
 export type RoundedColumnChartProps = {
   data?: readonly RoundedColumnDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   seriesName?: string;
@@ -105,14 +105,14 @@ export function RoundedColumnGeometry({ data, theme, animate = true, seriesName 
   </div>;
 }
 
-export function RoundedColumnChart({ data = roundedColumnExample, visualSystem = "signal", animate, title = "Momentum is setting the pace", subtitle = "THREE PRIORITIES · CURRENT SCORE", seriesName = "Score", unit = "", cornerRadius = 18 }: RoundedColumnChartProps) {
+export function RoundedColumnChart({ durationMs, progress,  data = roundedColumnExample, visualSystem = "signal", animate, title = "Momentum is setting the pace", subtitle = "THREE PRIORITIES · CURRENT SCORE", seriesName = "Score", unit = "", cornerRadius = 18 }: RoundedColumnChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveRoundedColumnAnimation(animate, reducedMotion);
   const validation = validateRoundedColumnData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   const safeData = validation.valid ? data : [];
-  return <ChartShell code="C02" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · ROUNDED COLUMNS`} theme={theme} state={state} description="A small-category vertical comparison with controlled rounded caps and an unbroken zero-based scale."><RoundedColumnGeometry data={safeData} theme={theme} animate={shouldAnimate} seriesName={seriesName} unit={unit} cornerRadius={cornerRadius} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="C02" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · ROUNDED COLUMNS`} theme={theme} state={state} description="A small-category vertical comparison with controlled rounded caps and an unbroken zero-based scale."><RoundedColumnGeometry data={safeData} theme={theme} animate={shouldAnimate} seriesName={seriesName} unit={unit} cornerRadius={cornerRadius} /></ChartShell>;
 }
 
 export { buildRoundedColumnGeometry, getControlledColumnRadius, getRoundedColumnDomain, validateRoundedColumnData } from "./schema";

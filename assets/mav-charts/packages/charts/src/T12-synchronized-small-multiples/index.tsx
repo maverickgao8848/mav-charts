@@ -9,7 +9,7 @@ import { getSynchronizedSmallMultiplesMotion } from "./motion";
 import { buildSynchronizedGeometry, validateSynchronizedPanels, type SynchronizedGeometryPoint, type SynchronizedPanel } from "./schema";
 
 const SYNC_ID = "t12-synchronized-small-multiples";
-export type SynchronizedSmallMultiplesChartProps = { data?: readonly SynchronizedPanel[]; visualSystem?: VisualSystemId; animate?: boolean; title?: string; subtitle?: string };
+export type SynchronizedSmallMultiplesChartProps = { data?: readonly SynchronizedPanel[]; visualSystem?: VisualSystemId; animate?: boolean; durationMs?: number; progress?: number; title?: string; subtitle?: string };
 export const formatSynchronizedLabel = (label: string, maximum = 10) => label.length > maximum ? `${label.slice(0, maximum - 1).trimEnd()}…` : label;
 export const formatSynchronizedValue = (value: number) => { const absolute = Math.abs(value); if (absolute >= 1e9) return `${Number((value / 1e9).toFixed(1))}B`; if (absolute >= 1e6) return `${Number((value / 1e6).toFixed(1))}M`; if (absolute >= 1e3) return `${Number((value / 1e3).toFixed(1))}K`; return Number(value.toFixed(4)).toString(); };
 export const resolveSynchronizedAnimation = (animate: boolean | undefined, reduced: boolean) => animate ?? !reduced;
@@ -66,9 +66,9 @@ export function SynchronizedSmallMultiplesGeometry({ data, theme, animate = true
   </div>;
 }
 
-export function SynchronizedSmallMultiplesChart({ data = synchronizedSmallMultiplesExample, visualSystem = "signal", animate, title = "Growth strengthened before sentiment followed", subtitle = "THREE METRICS · INDEPENDENT SCALES · ONE SHARED OBSERVATION" }: SynchronizedSmallMultiplesChartProps) {
+export function SynchronizedSmallMultiplesChart({ durationMs, progress,  data = synchronizedSmallMultiplesExample, visualSystem = "signal", animate, title = "Growth strengthened before sentiment followed", subtitle = "THREE METRICS · INDEPENDENT SCALES · ONE SHARED OBSERVATION" }: SynchronizedSmallMultiplesChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem), validation = validateSynchronizedPanels(data), state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="T12" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · SYNCHRONIZED SMALL MULTIPLES`} theme={theme} state={state} description="Two to four aligned panels share ordered observations while retaining independent units and domains."><SynchronizedSmallMultiplesGeometry data={validation.valid ? data : []} theme={theme} animate={resolveSynchronizedAnimation(animate, usePrefersReducedMotion())} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="T12" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · SYNCHRONIZED SMALL MULTIPLES`} theme={theme} state={state} description="Two to four aligned panels share ordered observations while retaining independent units and domains."><SynchronizedSmallMultiplesGeometry data={validation.valid ? data : []} theme={theme} animate={resolveSynchronizedAnimation(animate, usePrefersReducedMotion())} /></ChartShell>;
 }
 
 export { buildSynchronizedGeometry, getSynchronizedPanelDomain, mapSynchronizedX, validateSynchronizedPanels } from "./schema";

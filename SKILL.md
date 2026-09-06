@@ -151,7 +151,7 @@ Check all applicable items:
 - The explicit visual-system choice appears in the component props and rendered output.
 - The selected viewport is legible without clipped labels or overlaps.
 - No console error, build error, or newly introduced warning is present.
-- Static captures disable or deterministically settle animation.
+- Static captures use `progress={1}` (legacy `capture` remains supported); video frames pass a finite `progress` from 0 to 1 and an explicit `durationMs`.
 - PPT, image, web, or video output opens and visually matches the MAV template.
 - Placeholder data, if authorized, is visibly identified as placeholder data.
 - The installed skill remains unchanged; task-specific files live in the materialized copy or requested output directory.

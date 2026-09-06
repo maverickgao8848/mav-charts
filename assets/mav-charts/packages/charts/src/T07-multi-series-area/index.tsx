@@ -30,7 +30,7 @@ import {
 export type MultiSeriesAreaChartProps = {
   data?: readonly MultiSeriesAreaDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   primaryName?: string;
@@ -414,7 +414,7 @@ export function MultiSeriesAreaGeometry({
     </div>
   );
 }
-export function MultiSeriesAreaChart({
+export function MultiSeriesAreaChart({ durationMs, progress,
   data = multiSeriesAreaExample,
   visualSystem = "signal",
   animate,
@@ -423,13 +423,13 @@ export function MultiSeriesAreaChart({
   primaryName = "Current",
   comparisonName = "Prior",
   unit = "",
-}: MultiSeriesAreaChartProps) {
+}: MultiSeriesAreaChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateMultiSeriesAreaData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="T07"
       title={title}
       subtitle={subtitle}

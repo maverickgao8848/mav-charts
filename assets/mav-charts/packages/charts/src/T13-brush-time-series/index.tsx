@@ -11,7 +11,7 @@ import { buildBrushTimeSeriesGeometry, getBrushTimeSeriesDomain, validateBrushTi
 export type BrushTimeSeriesChartProps = {
   data?: readonly BrushTimeSeriesDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -113,13 +113,13 @@ export function BrushTimeSeriesGeometry({ data, theme, animate = true }: { data:
   </div>;
 }
 
-export function BrushTimeSeriesChart({ data = brushTimeSeriesExample, visualSystem = "digital", animate, title = "Traffic accelerated without a latency tax", subtitle = "REQUESTS / MIN · LIVE 24H WINDOW" }: BrushTimeSeriesChartProps) {
+export function BrushTimeSeriesChart({ durationMs, progress,  data = brushTimeSeriesExample, visualSystem = "digital", animate, title = "Traffic accelerated without a latency tax", subtitle = "REQUESTS / MIN · LIVE 24H WINDOW" }: BrushTimeSeriesChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveBrushTimeSeriesAnimation(animate, reducedMotion);
   const validation = validateBrushTimeSeriesData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="T13" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · BRUSH TIME SERIES`} theme={theme} state={state} description="A long time series with a draggable focus window."><BrushTimeSeriesGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="T13" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · BRUSH TIME SERIES`} theme={theme} state={state} description="A long time series with a draggable focus window."><BrushTimeSeriesGeometry data={data} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildBrushTimeSeriesGeometry, getBrushTimeSeriesDomain, validateBrushTimeSeriesData } from "./schema";

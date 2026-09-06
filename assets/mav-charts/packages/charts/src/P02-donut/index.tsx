@@ -20,7 +20,7 @@ import {
 export type DonutChartProps = {
   data?: readonly DonutDatum[];
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
   unit?: string;
@@ -337,20 +337,20 @@ export function DonutGeometry({
   );
 }
 
-export function DonutChart({
+export function DonutChart({ durationMs, progress,
   data = donutExample,
   visualSystem = "signal",
   animate,
   title = "Enterprise represents nearly three quarters of the reported mix",
   subtitle = "DONUT · ANGLE ENCODES SHARE · CENTER = REPORTED TOTAL",
   unit = "",
-}: DonutChartProps) {
+}: DonutChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem),
     validation = validateDonutData(data),
     state =
       data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
   return (
-    <ChartShell
+    <ChartShell durationMs={durationMs} progress={progress}
       code="P02"
       title={title}
       subtitle={subtitle}

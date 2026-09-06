@@ -12,7 +12,7 @@ export type BubbleQuadrantChartProps = {
   data?: readonly BubbleQuadrantDatum[];
   thresholds?: BubbleQuadrantThresholds;
   visualSystem?: VisualSystemId;
-  animate?: boolean;
+  animate?: boolean; durationMs?: number; progress?: number;
   title?: string;
   subtitle?: string;
 };
@@ -103,13 +103,13 @@ export function BubbleQuadrantGeometry({ data, theme, thresholds = { x: 50, y: 5
   </div>;
 }
 
-export function BubbleQuadrantChart({ data = bubbleQuadrantExample, thresholds = { x: 50, y: 50 }, visualSystem = "signal", animate, title = "Two challengers escaped the price trap", subtitle = "PRICE INDEX × GROWTH · BUBBLE AREA = SHARE" }: BubbleQuadrantChartProps) {
+export function BubbleQuadrantChart({ durationMs, progress,  data = bubbleQuadrantExample, thresholds = { x: 50, y: 50 }, visualSystem = "signal", animate, title = "Two challengers escaped the price trap", subtitle = "PRICE INDEX × GROWTH · BUBBLE AREA = SHARE" }: BubbleQuadrantChartProps) { animate = progress === undefined ? animate : false;
   const theme = getVisualSystem(visualSystem);
   const reducedMotion = usePrefersReducedMotion();
   const shouldAnimate = resolveBubbleQuadrantAnimation(animate, reducedMotion);
   const validation = validateBubbleQuadrantData(data);
   const state = data.length === 0 ? "empty" : validation.valid ? "ready" : "invalid";
-  return <ChartShell code="D03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · BUBBLE QUADRANT`} theme={theme} state={state} description="Two-axis positioning with area-proportional size bubbles and explicit thresholds."><BubbleQuadrantGeometry data={data} thresholds={thresholds} theme={theme} animate={shouldAnimate} /></ChartShell>;
+  return <ChartShell durationMs={durationMs} progress={progress} code="D03" title={title} subtitle={subtitle} source={`${theme.name.toUpperCase()} · BUBBLE QUADRANT`} theme={theme} state={state} description="Two-axis positioning with area-proportional size bubbles and explicit thresholds."><BubbleQuadrantGeometry data={data} thresholds={thresholds} theme={theme} animate={shouldAnimate} /></ChartShell>;
 }
 
 export { buildBubbleQuadrantGeometry, getBubbleQuadrantDomains, validateBubbleQuadrantData } from "./schema";
